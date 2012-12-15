@@ -1,0 +1,44 @@
+
+
+              LAMBDA
+             =========
+             Changelog
+
+1.0
+
+* First build.
+
+
+1.1
+
+* Fixed bug preventing the open file dialog to pop up on Windows machines.
+* Linked against QT libraries statically to eliminate dependency problems.
+* Simplified compilation thanks to modified project files.
+
+
+1.2
+
+* Implemented preemphasis formula for higher accuracy of boundary/wall reflexion factors
+* Extended reflexion factor range to [-1.0, +1.0] (formerly [0.0, +1.0])
+
+
+2.0
+
+* Implemented frequency dependent boundaries.
+* Implemented velocity sources.
+* fixed the delta-pulse source to work correctly.
+* Added the possibility to specify digital filters for the walls in the sim file.
+* Added the possibility to specify an angle matrix in the sim file to achieve
+  higher accuracy of skewed walls and velocity sources.
+* Added a new parameter "rho" (air density in kg/m^3) in the sim file, which is
+  needed for the velocity sources.
+* New sim file format is introduced with this version; it is no longer compatible
+  to older sim files. This was necessary due to the changes above.
+* Added a "walls"-checkbox to the GUI, which makes walls and receivers visible in
+  the visualization window.
+* Added the command line parameter "-walls" which does the same like clicking
+  manually on the walls checkbox (see above).
+* Added the command line parameter "-exit" which forces lambda to terminate itself
+  on the end of a simulation. This is very useful for batch processing of multiple
+  simulations.
+* Added a progress indicator in lambda's status line.

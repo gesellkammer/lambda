@@ -1,0 +1,16 @@
+
+
+              LAMBDA
+             =========
+             Todo list
+
+
+* fix w32 avi encoder linker bug
+
+* comfortable sim file editor
+
+* implement dampening nodes
+
+* fix bug: program crashes when pressing the
+  reset-button for the 2nd time during a
+  simulation with digital filters

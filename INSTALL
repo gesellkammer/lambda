@@ -1,0 +1,44 @@
+		LAMBDA
+	     =============
+	     Install guide
+
+This package provides prebuilt binaries to run without any
+installation. Read the quick installation guide to use these.
+If you need to compile your own executable, follow the compilation
+instructions.
+
+
+Quick install (using prebuilt binaries)
+=============
+
+* prerequisites
+  - you need to have 'libc6', version 2.4 or higher, installed on your system
+
+* extraction
+  - extract the executable from the 'bin' directory of this archive
+    to /usr/bin
+  - for your convenience, also extract the directories 'examples',
+    'scripts' and 'doc' to your file system
+
+
+Building from source
+====================
+
+* prerequisites
+  - 'libqt4-core'
+  - 'libqt4-dev'
+  - 'libqt4-debug'
+  - 'libqt4-debug-dev'
+  - a c++ compiler (gcc and g++)
+
+* configuration
+  - extract the 'src' directory from this archive to a temporary
+    destination on you file system 
+  - change to that directory
+  - run 'qmake'
+
+* building and installing
+  - run 'make'
+  - you should now find the executable 'lambda' in the 'src' directory
+  - extract the 'examples', 'scripts' and 'doc' directories
+    from this archive to your file system for your convenience

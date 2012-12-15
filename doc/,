@@ -1,0 +1,59 @@
+.GitHub #tm_webpreview_header {color:#000;}
+.GitHub #tm_webpreview_header .headline {font-size:20px;font-weight:bold;font-family:Helvetica;letter-spacing:-1px;color:#4183C4;}
+.GitHub #tm_webpreview_content {
+	background-color:#f8f8f8;
+	font-family:"PT Sans";
+	font-size: 14px;
+	;}
+.GitHub #tm_webpreview_content h1,h2,h3,h4,h5,h6{border:0;}
+.GitHub #tm_webpreview_content h1{font-size:170%;border-top:4px solid #aaa;padding-top:.5em;margin-top:1.5em;}
+.GitHub #tm_webpreview_content h1:first-child{margin-top:0;padding-top:.25em;border-top:none;}
+.GitHub #tm_webpreview_content h2{font-size:150%;margin-top:1.5em;border-top:1px solid #efefef;padding-top:.5em;
+	font-family:"PT Sans Narrow", Helvetica;
+}
+.GitHub #tm_webpreview_content h3{margin-top:1em;}
+.GitHub #tm_webpreview_content p{margin:1em 0;line-height:1.5em;}
+.GitHub #tm_webpreview_content ul{margin:1em 0 1em 2em;}
+.GitHub #tm_webpreview_content ol{margin:1em 0 1em 2em;}
+.GitHub #tm_webpreview_content ul li{margin-top:.5em;margin-bottom:.5em;}
+.GitHub #tm_webpreview_content ul ul,ul ol,ol ol,ol ul {margin-top:0;margin-bottom:0;}
+.GitHub #tm_webpreview_content blockquote{margin:1em 0;border-left:5px solid #ddd;padding-left:.6em;color:#555;}
+.GitHub #tm_webpreview_content dt{font-weight:bold;margin-left:1em;}
+.GitHub #tm_webpreview_content dd{margin-left:2em;margin-bottom:1em;}
+.GitHub #tm_webpreview_content table{
+	margin:1em 0;
+	font-family: "PT Sans Narrow";
+	}
+.GitHub #tm_webpreview_content table th{
+	border-bottom:1px dashed #bbb;
+	padding:.2em 1em;
+
+}
+.GitHub #tm_webpreview_content table td{border-bottom:1px dashed #ddd;padding:.2em 1em;}
+.GitHub #tm_webpreview_content pre{
+	margin:1em 0;
+	font-family: "Droid Sans Mono";
+	font-size:12px;
+	background-color:#f8f8ff;
+	border:1px solid #cecece;
+	border-radius: 3px;
+	padding:.8em;
+	
+	line-height:1.5em;color:#444;overflow:auto;}
+.GitHub #tm_webpreview_content pre code{
+	padding:0;
+	font-size:12px;
+	background-color:#f8f8ff;
+
+	border:none;}
+.GitHub #tm_webpreview_content code{
+	font-size:12px;
+	background-color:#f8f8ff;
+	color:#444;
+	padding:0.2em;
+	border-radius: 3px;
+	border:1px solid #dedede;}
+.GitHub #tm_webpreview_content a{color:#4183c4;text-decoration:none;}
+.GitHub #tm_webpreview_content a:hover{text-decoration:underline;}
+.GitHub #tm_webpreview_content a code,a:link code,a:visited code{color:#4183c4;}
+.GitHub #tm_webpreview_content img{max-width:100%;}
