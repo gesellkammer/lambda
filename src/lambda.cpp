@@ -1418,6 +1418,7 @@ void lambda::checkScreen()
 //
 void lambda::processVis()
 {
+	float *framedata;
 	if (graphics.screen!=NULL)
 	{
 		// If vis screen is really on, set frame data to the new pressure data
@@ -1425,11 +1426,19 @@ void lambda::processVis()
 		// Scale data for contrast 
 		*graphics.frame*=(float)graphics.contrast;
 		*graphics.frame+=128;
+		framedata = graphics.frame->data;
 		// Prevent clipping
 		for (int n=0;n<config.nNodes;n++)
+
+		/*
 		{
 			if (graphics.frame->data[n]>255) graphics.frame->data[n]=255;
 			else if (graphics.frame->data[n]<0) graphics.frame->data[n]=0;
+		}
+		*/
+		{
+			if (framedata[n]>255) framedata[n]=255;
+			else if (framedata[n]<0) framedata[n]=0;
 		}
 		// draw walls and receivers, if walls-checkbox is checked
 		if (gui.showboundsBox->isChecked())
@@ -2925,6 +2934,8 @@ void lambda::processSim()
 		index.presPast=index.idxP[idxPast]; // past pressure index
 		index.presPres=index.idxP[idxPres]; // present pressure index
 		index.presFutu=index.idxP[idxFutu]; // future pressure index
+		float *index_presFutu = index.presFutu;
+		float *presPres = index.presPres;
 		
 		index.inciPastLeft=index.idxILeft[idxPast];     // past left incident pressure index
 		index.inciPastTop=index.idxITop[idxPast];       // past top incident pressure index
@@ -2970,13 +2981,13 @@ void lambda::processSim()
 			{
 				case 1: // sinusoidal source
 					// index.presPres[srcxy]=amp*sin(twopi*freq*t+onepi*phi/180.f);
-					index.presPres[srcxy]=amp*sin(twopi_freq*t+onepi_phi_180);
+					presPres[srcxy]=amp*sin(twopi_freq*t+onepi_phi_180);
 					break;
 				case 2: // rectangular source
 					if ((int)(2.f*(freq*t+phi/360.f))%2==0)
-						index.presPres[srcxy]=amp;
+						presPres[srcxy]=amp;
 					else
-						index.presPres[srcxy]=-amp;
+						presPres[srcxy]=-amp;
 					break;
 				case 3: // delta-pulse source
 					if (config.n==0)
@@ -2995,10 +3006,10 @@ void lambda::processSim()
 						hann=(float)cos(onepi*(t+T/2.f)/T); // compute hann window
 						hann*=hann;
 					}
-					index.presPres[srcxy]=hann*amp*(float)sin(twopi*freq*t+onepi*phi/180.f);
+					presPres[srcxy]=hann*amp*(float)sin(twopi_freq*t+onepi_phi_180);
 					break;
 				case 6: // sinusoidal velocity source
-					magnitude=config.rho*config.cTube*amp*sin(twopi*freq*t+onepi*phi/180.f);
+					magnitude=config.rho*config.cTube*amp*sin(twopi_freq*t+onepi_phi_180);
 					if ((alpha>=0.f)&&(alpha<90.f))
 					{
 						// alpha between 0 and 90 degrees? -> left and top incidence
@@ -3146,7 +3157,7 @@ void lambda::processSim()
 					}
 					break;
 				case 20: // white-noise
-					index.presPres[srcxy] = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
+					presPres[srcxy] = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
 					break;
 			}
 		}
@@ -3156,7 +3167,7 @@ void lambda::processSim()
 		// Work through all the nodes in the environment
 		for (int pos=0;pos<config.nNodes;pos++)
 		{
-			index.presFutu[pos]=0.f;
+			index_presFutu[pos]=0.f;
 			if (!data.deadnode[pos]) // deadnode? --> no calculation needed!
 			{
 				if (data.boundary[pos]) // boundary? --> no standard propagation!
@@ -3164,7 +3175,7 @@ void lambda::processSim()
 					if (data.filt_left[pos]) // left filter
 					{
 						// calculate filter input
-						scatFutuLeft=index.presPres[pos]-index.inciPresLeft[pos];
+						scatFutuLeft=presPres[pos]-index.inciPresLeft[pos];
 						// calculate the digital filter
 						yn=scatFutuLeft*data.filtcoeffsB_left[pos][0];
 						for (n=1;n<data.filtnumcoeffs_left[pos];n++)
@@ -3184,18 +3195,18 @@ void lambda::processSim()
 						data.oldy_left[pos][0]=yn;
 						// and write the filter output into the pressure matrix
 						index.inciFutuLeft[pos]=yn;
-						index.presFutu[pos]+=index.inciFutuLeft[pos];
+						index_presFutu[pos]+=index.inciFutuLeft[pos];
 					}
 					else // no left filter
 					{
 						scatPresLeft=index.presPast[pos]-index.inciPastLeft[pos];
-						index.inciFutuLeft[pos]=index.presPres[pos-1]-scatPresLeft;
-						index.presFutu[pos]+=index.inciFutuLeft[pos];
+						index.inciFutuLeft[pos]=presPres[pos-1]-scatPresLeft;
+						index_presFutu[pos]+=index.inciFutuLeft[pos];
 					}
 					if (data.filt_top[pos]) // top filter
 					{
 						// calculate filter input
-						scatFutuTop=index.presPres[pos]-index.inciPresTop[pos];
+						scatFutuTop=presPres[pos]-index.inciPresTop[pos];
 						// calculate the digital filter
 						yn=scatFutuTop*data.filtcoeffsB_top[pos][0];
 						for (n=1;n<data.filtnumcoeffs_top[pos];n++)
@@ -3215,18 +3226,18 @@ void lambda::processSim()
 						data.oldy_top[pos][0]=yn;
 						// and write the filter output into the pressure matrix
 						index.inciFutuTop[pos]=yn;
-						index.presFutu[pos]+=index.inciFutuTop[pos];
+						index_presFutu[pos]+=index.inciFutuTop[pos];
 					}
 					else // no top filter
 					{
 						scatPresTop=index.presPast[pos]-index.inciPastTop[pos];
-						index.inciFutuTop[pos]=index.presPres[pos-config.nX]-scatPresTop;
-						index.presFutu[pos]+=index.inciFutuTop[pos];
+						index.inciFutuTop[pos]=presPres[pos-config.nX]-scatPresTop;
+						index_presFutu[pos]+=index.inciFutuTop[pos];
 					}
 					if (data.filt_right[pos]) // right filter
 					{
 						// calculate filter input
-						scatFutuRight=index.presPres[pos]-index.inciPresRight[pos];
+						scatFutuRight=presPres[pos]-index.inciPresRight[pos];
 						// calculate the digital filter
 						yn=scatFutuRight*data.filtcoeffsB_right[pos][0];
 						for (n=1;n<data.filtnumcoeffs_right[pos];n++)
@@ -3246,18 +3257,18 @@ void lambda::processSim()
 						data.oldy_right[pos][0]=yn;
 						// and write the filter output into the pressure matrix
 						index.inciFutuRight[pos]=yn;
-						index.presFutu[pos]+=index.inciFutuRight[pos];
+						index_presFutu[pos]+=index.inciFutuRight[pos];
 					}
 					else // no right filter
 					{
 						scatPresRight=index.presPast[pos]-index.inciPastRight[pos];
-						index.inciFutuRight[pos]=index.presPres[pos+1]-scatPresRight;
-						index.presFutu[pos]+=index.inciFutuRight[pos];
+						index.inciFutuRight[pos]=presPres[pos+1]-scatPresRight;
+						index_presFutu[pos]+=index.inciFutuRight[pos];
 					}
 					if (data.filt_bottom[pos]) // bottom filter
 					{
 						// calculate filter input
-						scatFutuBottom=index.presPres[pos]-index.inciPresBottom[pos];
+						scatFutuBottom=presPres[pos]-index.inciPresBottom[pos];
 						// calculate the digital filter
 						yn=scatFutuBottom*data.filtcoeffsB_bottom[pos][0];
 						for (n=1;n<data.filtnumcoeffs_bottom[pos];n++)
@@ -3277,22 +3288,22 @@ void lambda::processSim()
 						data.oldy_bottom[pos][0]=yn;
 						// and write the filter output into the pressure matrix
 						index.inciFutuBottom[pos]=yn;
-						index.presFutu[pos]+=index.inciFutuBottom[pos];
+						index_presFutu[pos]+=index.inciFutuBottom[pos];
 					}
 					else // no bottom filter
 					{
 						scatPresBottom=index.presPast[pos]-index.inciPastBottom[pos];
-						index.inciFutuBottom[pos]=index.presPres[pos+config.nX]-scatPresBottom;
-						index.presFutu[pos]+=index.inciFutuBottom[pos];
+						index.inciFutuBottom[pos]=presPres[pos+config.nX]-scatPresBottom;
+						index_presFutu[pos]+=index.inciFutuBottom[pos];
 					}
-					index.presFutu[pos]*=0.5f;
+					index_presFutu[pos]*=0.5f;
 				}
 				else // no boundary node: do the fast standard propagation
 				{
-					index.presFutu[pos]=(index.presPres[pos-1]
-										+index.presPres[pos-config.nX]
-										+index.presPres[pos+1]
-										+index.presPres[pos+config.nX])*0.5f-index.presPast[pos];
+					index_presFutu[pos]=(presPres[pos-1]
+										+presPres[pos-config.nX]
+										+presPres[pos+1]
+										+presPres[pos+config.nX])*0.5f-index.presPast[pos];
 				}
 			}
 		}
