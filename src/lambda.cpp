@@ -79,10 +79,12 @@ lambda::lambda(QWidget *parent, const char *name, int argc, char *argv[]): QWidg
 {
 	// Create GUI
 	initGui(name);
-	// Initialize variables
-	initVariables();
 	// Process input parameters that might be provided in argv
 	handleParameters(argc, argv);
+	// Initialize variables
+	initVariables();
+	srand ( time(NULL) );
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -610,8 +612,6 @@ void lambda::resetSimulation()
 		  for (int n=0;n<config.nNodes;n++)
 		  {
 		    if (data.oldx_bottom[n]!=NULL) delete[] data.oldx_bottom[n];  
-		    // this line crashes!
-		    // cout << "skipping: if (data.oldx_bottom[n]!=NULL) delete[] data.oldx_bottom[n];"; 
 		    data.oldx_bottom[n]=NULL;
 	      }
 	      delete[] data.oldx_bottom;
@@ -812,6 +812,28 @@ void lambda::handleParameters(int argc, char *argv[])
 				 (argument=="/exit")||(argument=="/Exit")||(argument=="/EXIT"))
 		{
 			AUTOEXIT=true; // enable automatic exit at the end of simulation
+		}
+		else if ((argument=="-help")||(argument=="--help")||(argument=="/help"))
+		{
+			cout << "lambda [options]\n"
+			        "\n"
+			        "-file simfile   : open the .sim file\n"
+			        "-vis            : activate visualization\n"
+			        "-rce            : activate recording at receivers, if defined\n"
+			        "-walls          : show walls, if defined\n"
+			        "-avi            : record the simulation as an avi\n"
+			        "-quality N  (0-100)  : adjust the quality of the avi rendering (default 100)\n"
+			        "-contrast N (0-100)  : adjust the contrast of the visualization (default 50)\n"
+			        "-rco            : activate the recording of the visualization (as a .rco file)\n"
+			        "-zoom           : set the zoom level of a visualization (an integer number)\n"
+			        "-skip           : set number of frames to skip (default 0)\n"
+			        "-framerate      : set the framerate of the simulation (default 25)\n"
+			        "-exit           : exit the program after finishing (good for batch processes)\n"
+			        "\n"
+
+			        ;
+			exit(0);
+
 		}
 	}
 	
@@ -1834,7 +1856,7 @@ simError lambda::defineSource(const int idx,const simSource *srcData)
 	// Check if coordinates are in range of environment size
 	if ((srcData->y<0)||(srcData->y>=config.nY)||(srcData->x<0)||(srcData->x>=config.nX)) return SRC_COORDS_BAD;
 	// Check if source has legal source function type
-	if ((srcData->type<1)||(srcData->type>10)) return SRC_TYPE_BAD;
+	if ((srcData->type<1)||(srcData->type>100)) return SRC_TYPE_BAD;
 	// Check for positive frequency
 	if (srcData->freq<=0) return SRC_FREQ_BAD;
 	// Add data to source array
@@ -2780,7 +2802,6 @@ simError lambda::initSimulation()
 		{
 			// reserve+initialize recursive and non-recursive memory for bottom filters
 			int memorycnt=data.filtnumcoeffs_bottom[pos]-1;
-			cout << "filtnumcoeffs_bottom pos " << pos << "  " << data.filtnumcoeffs_bottom[pos];
 			if (memorycnt==0)   // to ensure that even 0th order filters have
 			    memorycnt=1;    // memory; this spares an if-condition in the algorithm
 			data.oldx_bottom[pos]=new float[memorycnt];
@@ -2943,10 +2964,13 @@ void lambda::processSim()
 			float T=1.f/freq;
 			float hann;
 			float magnitude=0.f;
+			float twopi_freq = twopi*freq;
+			float onepi_phi_180 = onepi*phi/180.f;
 			switch(type)
 			{
 				case 1: // sinusoidal source
-					index.presPres[srcxy]=amp*sin(twopi*freq*t+onepi*phi/180.f);
+					// index.presPres[srcxy]=amp*sin(twopi*freq*t+onepi*phi/180.f);
+					index.presPres[srcxy]=amp*sin(twopi_freq*t+onepi_phi_180);
 					break;
 				case 2: // rectangular source
 					if ((int)(2.f*(freq*t+phi/360.f))%2==0)
@@ -3120,6 +3144,10 @@ void lambda::processSim()
 						data.velo_bottom[srcxy]=cos((alpha-270.f)*onepi/180.f)*magnitude;
 						data.velo_left[srcxy]=sin((alpha-270.f)*onepi/180.f)*magnitude;
 					}
+					break;
+				case 20: // white-noise
+					index.presPres[srcxy] = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
+					break;
 			}
 		}
     			
@@ -3275,7 +3303,7 @@ void lambda::processSim()
 		if (gui.aviBox->isChecked()) if (config.n%graphics.skip==0) processAvi();
 		if (gui.visBox->isChecked()) if (config.n%graphics.skip==0)	processVis();
 		// update the progress indicator every 20th iteration
-		if ((config.n%20==0)&&(config.nN!=0))
+		if ((config.n%50==0)&&(config.nN!=0))
 		{
 			int progress=(int)((float)config.n*10.f/(float)config.nN);
 			switch(progress)

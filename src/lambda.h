@@ -43,6 +43,7 @@
 #include <sys/stat.h>
 #include "revel.h"
 #include "CImg.h"
+#include <time.h>
 
 #if  cimg_OS==1
 #define MAKEDIR mkdir((char*)dirFile.c_str(),0777);
