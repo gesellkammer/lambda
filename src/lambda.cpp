@@ -36,7 +36,7 @@ int GFX_STDCONTRAST = 50;	// Standard value for contrast control
 int GFX_MAXQUALITY  = 100;	// Max value for JPG encoding quality
 int GFX_MINQUALITY  = 1;	// Min value for JPG encoding quality
 int GFX_STDQUALITY  = 100;	// Standard value for JPG encoding quality
-int GFX_MAXSAMPLES  = 99999;	// Max value for number of iterations
+int GFX_MAXSAMPLES  = 9999999;	// Max value for number of iterations
 int GFX_MINSAMPLES  = 0;	// Min value for number of iterations
 int GFX_STDSAMPLES  = 0;	// Standard value for number of iterations
 int GFX_MAXSKIP     = 999;	// Max value for number of iterations to skip
@@ -79,10 +79,10 @@ lambda::lambda(QWidget *parent, const char *name, int argc, char *argv[]): QWidg
 {
 	// Create GUI
 	initGui(name);
-	// Process input parameters that might be provided in argv
-	handleParameters(argc, argv);
 	// Initialize variables
 	initVariables();
+	// Process input parameters that might be provided in argv
+	handleParameters(argc, argv);
 	srand ( time(NULL) );
 	
 }
@@ -211,7 +211,7 @@ void lambda::initGui(const char *name)
 	gui.samplesBox->setSpecialValueText("infinite");
 	gui.samplesBox->setAlignment(Qt::AlignRight);
 	gui.samplesBox->setFixedWidth(GUI_SPINWIDTH);
-	gui.samplesBox->setRange(0,99999);
+	gui.samplesBox->setRange(0,GFX_MAXSAMPLES);
 	// Initialize status display
 	gui.statusLine = new QLabel(gui.statusBox);
 	gui.statusLine->setText("<font color=red>Bad Data</font>");	// No data is loaded at startup
@@ -1443,8 +1443,12 @@ void lambda::processVis()
 		// draw walls and receivers, if walls-checkbox is checked
 		if (gui.showboundsBox->isChecked())
 		{
-			for (int n=0;n<config.nNodes;n++)
-				if (abs(data.envi[n])!=0.f) graphics.frame->data[n]=255;
+			for (int n=0;n<config.nNodes;n++) {
+				if (abs(data.envi[n])!=0.f) {
+					framedata[n] = 255; 
+				} else if (data.deadnode[n]) 
+					framedata[n] = 0;
+			}
 		}
 		// Zoom support
 		// graphics.frame->resize(graphics.dispSizeX,graphics.dispSizeY,-100,-100,1);
@@ -1543,6 +1547,9 @@ void lambda::processAvi()
 {
  	int pixValue;	// Needed in anti-clipping procedure
 	int videoFrameSize;	// Revel stores video frame size here
+	int boundsbox_checked = gui.showboundsBox->isChecked();
+	int pow16_4 = (int)pow(16.f, (int)4);
+	int pow16_2 = (int)pow(16.f, (int)2);
 	CImg<float> frame(config.nX,config.nY);		// Create new frame
 	// Fill frame with current pressure data
 	frame = index.presFutu;
@@ -1553,17 +1560,29 @@ void lambda::processAvi()
 	frame.draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
 	// frame.draw_text(config.nX-242,config.nY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 	// Check each pixel for clipping
-	for (int k=0; k<config.nNodes; k++){
-		pixValue = (int)*(frame.data+k);
-		if (pixValue<0) pixValue = 0;
-		else if (pixValue>255) pixValue = 255;
-		// draw walls and receivers, if walls-checkbox is checked
-		if (gui.showboundsBox->isChecked())
+	if (boundsbox_checked) {
+		for (int k=0; k<config.nNodes; k++){
+			pixValue = (int)*(frame.data+k);
+			if (pixValue<0) pixValue = 0;
+			else if (pixValue>255) pixValue = 255;
+			// draw walls and receivers
 			if (abs(data.envi[k])!=0.f) pixValue=255;
-		// Copy clipping-free pixel info into videoframe (convert to hex!)
-		*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
+			// Copy clipping-free pixel info into videoframe (convert to hex!)
+			// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
+			*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
+		}
+	} 
+	else {
+		for (int k=0; k<config.nNodes; k++){
+				pixValue = (int)*(frame.data+k);
+				if (pixValue<0) pixValue = 0;
+				else if (pixValue>255) pixValue = 255;
+				// Copy clipping-free pixel info into videoframe (convert to hex!)
+				// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
+				*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
+			}	
 	}
-	// Encode this frame and add it to the cideo file
+	// Encode this frame and add it to the video file
 	Revel_EncodeFrame(files.videoStream,&files.videoFrame,&videoFrameSize);
 }
 
@@ -2090,6 +2109,7 @@ simError lambda::loadSimulation(const string fileName)
 	simError error=NONE;
 	simSource curSource;
 	bool donotreadnextblockid=false;
+	float value;
 
 	// check the filename
 	if (stat((char*)fileName.c_str(),&results)!=0) return FILE_BAD;
@@ -2148,9 +2168,18 @@ simError lambda::loadSimulation(const string fileName)
 	{
     	pdummy=new double[config.nNodes]; // reserve memory for env-data in simfile
     	data.envi=new float[config.nNodes]; // reserve memory for envi-matrix
+    	data.deadnode=new bool[config.nNodes]; // reserve mem for deadnode matrix
     	simFile.read((char*)pdummy,sizeof(double)*config.nNodes); // read envi-matrix
     	for (int pos=0;pos<config.nNodes;pos++) // and cast it from double to float
-      		data.envi[pos]=(float)pdummy[pos];  // (all nodes)
+    	{
+    		value = (float)pdummy[pos];
+    		data.deadnode[pos] = false;
+    		if( value == -999 ) {   			// is it a dead node?
+    			value = 0;		    			// turn it into empty
+    			data.deadnode[pos] = true;		// mark it as dead
+    		}
+      		data.envi[pos]=(float)value;               // (all nodes)
+      	}
 		delete[] pdummy;
 	}
 	else // ENV-Chunk does not exist -> close file and exit
@@ -2287,7 +2316,7 @@ simError lambda::loadSimulation(const string fileName)
 
 	//  ----- PREPROCESSING OF THE ENVIRONMENT -----
 	data.boundary=new bool[config.nNodes];              // mem for boundary indicator
-	data.deadnode=new bool[config.nNodes];              // mem for deadnode indicator
+	// data.deadnode=new bool[config.nNodes];              // mem for deadnode indicator
 	data.filt_left=new bool[config.nNodes];             // mem for filter left indicator
 	data.filt_top=new bool[config.nNodes];              // mem for filter top indicator
 	data.filt_right=new bool[config.nNodes];            // mem for filter right indicator
@@ -2308,7 +2337,7 @@ simError lambda::loadSimulation(const string fileName)
 	for (int pos=0;pos<config.nNodes;pos++)
 	{
 		data.boundary[pos]=false;
-		data.deadnode[pos]=false;
+		// data.deadnode[pos]=false;
 		data.filt_left[pos]=false;
 		data.filt_top[pos]=false;
 		data.filt_right[pos]=false;
