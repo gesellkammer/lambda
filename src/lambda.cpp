@@ -19,6 +19,9 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //  or visit http://www.gnu.org/licenses/gpl.html
 
+
+// SAMPLES 
+
 #include "lambda.h"
 
 using namespace std;
