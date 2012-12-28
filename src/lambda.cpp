@@ -52,6 +52,7 @@ bool AUTOEXIT       = false; // automatic exit when simulation end is reached
 int GFX_MINFRAMERATE = 10;
 int GFX_MAXFRAMERATE = 500;
 int GFX_STDFRAMERATE = 25;
+int MEMSRC = 20;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::lambda()
@@ -383,6 +384,7 @@ void lambda::initVariables()
 	data.velo_top=NULL;
 	data.velo_right=NULL;
 	data.velo_bottom=NULL;
+	data.mem=NULL;
 
 	resetAll();
 
@@ -443,6 +445,7 @@ void lambda::resetAll()
 	if (data.envi!=NULL) {delete[] data.envi; data.envi = NULL;}
 	if (data.angle!=NULL) {delete[] data.angle; data.angle = NULL;}
 	if (data.srcs!=NULL) {delete[] data.srcs; data.srcs = NULL;}
+	if (data.mem!=NULL) {delete[] data.mem; data.mem = NULL;}
 	if (data.filt_left!=NULL) {delete[] data.filt_left; data.filt_left = NULL;}
 	if (data.filt_top!=NULL) {delete[] data.filt_top; data.filt_top = NULL;}
 	if (data.filt_right!=NULL) {delete[] data.filt_right; data.filt_right = NULL;}
@@ -1894,6 +1897,7 @@ simError lambda::defineSource(const int idx,const simSource *srcData)
 	data.srcs[idx*6+3]=srcData->amp;
 	data.srcs[idx*6+4]=srcData->freq;
 	data.srcs[idx*6+5]=srcData->phase;
+
 	int srcxy;
 	srcxy=(int)data.srcs[idx*6+0]+(int)data.srcs[idx*6+1];
 	float alpha;
@@ -2567,7 +2571,9 @@ simError lambda::loadSimulation(const string fileName)
 		pdummy=new double;
 		simFile.read((char*)pdummy,sizeof(double)); // yes, read in the number of sources
 		set("nSrc",(int)*pdummy);
-		data.srcs=new float[config.nSrc*6]; // reserve memory for the sources
+		data.srcs=new float[config.nSrc*6];   // reserve memory for the sources
+		data.mem=new float[config.nSrc*MEMSRC]; // sources extra data
+		for (int n=0;n<config.nSrc*MEMSRC;n++) data.mem[n] = 0;
 		for (int n=0;n<config.nSrc;n++) // work through all the sources
 		{
 			simFile.read((char*)pdummy,sizeof(double)); // read src y-position
@@ -2857,6 +2863,7 @@ simError lambda::initSimulation()
 	data.velo_top=new float[config.nNodes];
 	data.velo_right=new float[config.nNodes];
 	data.velo_bottom=new float[config.nNodes];
+
 	for (int pos=0;pos<config.nNodes;pos++)
 	{
 		data.velo_left[pos]=0.f;
@@ -2986,7 +2993,14 @@ void lambda::processSim()
 		float scatFutuRight,scatPresRight;      // future+present right scattered pressure
 		float scatFutuBottom,scatPresBottom;    // future+present bottom scattered pressure
 
-		// Work through all the sources
+		// Work through all the sources. First init all the sources
+		for (int src=0;src<config.nSrc;src++) {
+			int srcpos=src*6;
+			int srcxy=(int)data.srcs[srcpos]+(int)data.srcs[srcpos+1];  // get actual source pos.
+			presPres[srcxy] = 0;
+		}
+		// then calculate press for each.
+		// this allows pressure sources to share the same node	
 		for (int src=0;src<config.nSrc;src++)
 		{
 			int srcpos=src*6;
@@ -3006,24 +3020,26 @@ void lambda::processSim()
 			float magnitude=0.f;
 			float twopi_freq = twopi*freq;
 			float onepi_phi_180 = onepi*phi/180.f;
+			float b0, b1, b2, white;
+			
 			switch(type)
 			{
 				case 1: // sinusoidal source
 					// index.presPres[srcxy]=amp*sin(twopi*freq*t+onepi*phi/180.f);
-					presPres[srcxy]=amp*sin(twopi_freq*t+onepi_phi_180);
+					presPres[srcxy] += amp*sin(twopi_freq*t+onepi_phi_180);
 					break;
 				case 2: // rectangular source
 					if ((int)(2.f*(freq*t+phi/360.f))%2==0)
-						presPres[srcxy]=amp;
+						presPres[srcxy] += amp;
 					else
-						presPres[srcxy]=-amp;
+						presPres[srcxy] -= amp;
 					break;
 				case 3: // delta-pulse source
 					if (config.n==0)
-						index.presPres[srcxy]=amp;
+						presPres[srcxy] += amp;
 					break;
 				case 4: // exponential decay source (not working correctly yet!!!)
-					index.presPres[srcxy]=amp*exp(-(float)config.n);
+					presPres[srcxy] += amp*exp(-(float)config.n);
 					break;
 				case 5: // hann-windowed sinusoidal source
 					if (t<0.f)
@@ -3035,7 +3051,7 @@ void lambda::processSim()
 						hann=(float)cos(onepi*(t+T/2.f)/T); // compute hann window
 						hann*=hann;
 					}
-					presPres[srcxy]=hann*amp*(float)sin(twopi_freq*t+onepi_phi_180);
+					presPres[srcxy] += hann*amp*(float)sin(twopi_freq*t+onepi_phi_180);
 					break;
 				case 6: // sinusoidal velocity source
 					magnitude=config.rho*config.cTube*amp*sin(twopi_freq*t+onepi_phi_180);
@@ -3186,13 +3202,38 @@ void lambda::processSim()
 					}
 					break;
 				case 20: // white-noise
-					presPres[srcxy] = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
+					presPres[srcxy] += amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
 					break;
+				case 21: // pink noise
+					white = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
+					b0 = data.mem[src*MEMSRC];
+					b1 = data.mem[src*MEMSRC+1];
+					b2 = data.mem[src*MEMSRC+2];
+					b0 = 0.99765 * b0 + white * 0.0990460;
+					b1 = 0.96300 * b1 + white * 0.2965164; 
+					b2 = 0.57000 * b2 + white * 1.0526913; 
+					presPres[srcxy] += b0 + b1 + b2 + white * 0.1848;  
+					data.mem[MEMSRC*50] = b0;
+					data.mem[src*MEMSRC+1] = b1;
+					data.mem[src*MEMSRC+2] = b2;
+					break;
+				/*
+				case 30: // looped sample, no interpolation
+					b0 = data.mem[src*MEMSRC];   // sample index 
+					b1 = data.mem[src*MEMSRC+1]; // position in buffer
+					smpl = data.smpls[(int)b0];
+					b2 = smpl.data[(int)b1];
+					data.mem[src*MEMSRC+1] = (b2+1) % smpl.numsamples;
+				*/ 
+
+
+
 			}
 		}
     			
 		int n; // counter variable
 		float yn; // filter output
+		int config_nX = config.nX;
 		// Work through all the nodes in the environment
 		for (int pos=0;pos<config.nNodes;pos++)
 		{
@@ -3260,7 +3301,7 @@ void lambda::processSim()
 					else // no top filter
 					{
 						scatPresTop=index.presPast[pos]-index.inciPastTop[pos];
-						index.inciFutuTop[pos]=presPres[pos-config.nX]-scatPresTop;
+						index.inciFutuTop[pos]=presPres[pos-config_nX]-scatPresTop;
 						index_presFutu[pos]+=index.inciFutuTop[pos];
 					}
 					if (data.filt_right[pos]) // right filter
@@ -3322,7 +3363,7 @@ void lambda::processSim()
 					else // no bottom filter
 					{
 						scatPresBottom=index.presPast[pos]-index.inciPastBottom[pos];
-						index.inciFutuBottom[pos]=presPres[pos+config.nX]-scatPresBottom;
+						index.inciFutuBottom[pos]=presPres[pos+config_nX]-scatPresBottom;
 						index_presFutu[pos]+=index.inciFutuBottom[pos];
 					}
 					index_presFutu[pos]*=0.5f;
@@ -3330,9 +3371,9 @@ void lambda::processSim()
 				else // no boundary node: do the fast standard propagation
 				{
 					index_presFutu[pos]=(presPres[pos-1]
-										+presPres[pos-config.nX]
+										+presPres[pos-config_nX]
 										+presPres[pos+1]
-										+presPres[pos+config.nX])*0.5f-index.presPast[pos];
+										+presPres[pos+config_nX])*0.5f-index.presPast[pos];
 				}
 			}
 		}

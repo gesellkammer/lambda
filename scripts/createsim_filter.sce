@@ -47,8 +47,8 @@ ENVI(1:YSIZE,100)=1;    // the three columns
 ENVI(1:YSIZE,200)=1;    // .
 ENVI(1:YSIZE,300)=1;    // .
 
-ENVI(200,1:XSIZE)=2;    // define the lower, horizontal digital filter
-                        // wall. "2" is the ID of the filter.
+ENVI(200,1:XSIZE)=4;    // define the lower, horizontal digital filter
+                        // wall. "4" is the ID of the filter.
 ENVI(198, 150) = -2;
 						
 // Define angular matrix here
@@ -78,9 +78,14 @@ end
 // Define digital filter(s) here
 filters=[];
 NUMFILTERS=1;       // we only need one filter
-actfilter_id=2;     // the filter gets the ID "2"
-b=[0.066605780250182 0 -0.066605780250182];
-a=[1 -1.828957870144994 0.866788439499635];
+actfilter_id=4;     // the filter gets the ID "4"
+// b=[0.066605780250182 0 -0.066605780250182];
+// a=[1 -1.828957870144994 0.866788439499635];
+// b=[0.9879197865753899, -1.9758395731507798, 0.9879197865753899]
+b = [0.784791786136 0.0 -3.92395893068 1.75987614775e-15 7.84791786136 -2.74980648086e-15 -7.84791786136 1.75987614775e-15 3.92395893068 0.0 -0.784791786136]
+
+// a=[1 -1.9657784768560354, 0.9859006694455243]
+a = [1.0 0.437964225605 -4.42179846068 -1.53136015393 7.93807725797 2.02775078487 -7.21710317414 -1.20335180505 3.3174669317 0.26974135532 -0.615898147584]
 actfilter_a=a;
 actfilter_b=b;
 filters=[filters actfilter_id length(actfilter_a) length(actfilter_b) actfilter_a actfilter_b];

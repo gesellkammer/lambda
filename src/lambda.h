@@ -126,6 +126,7 @@ struct simData{
 	float *velo_top;    // array containing the actual velocity of velo sources from top dir.
 	float *velo_right;  // array containing the actual velocity of velo sources from right dir.
 	float *velo_bottom; // array containing the actual velocity of velo sources from bottom dir.
+	float *mem;         // array for sources to use for storing information between samples.
 };
 
 // Indices used during simulation process.

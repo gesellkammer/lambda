@@ -11,6 +11,4 @@
 
 * implement dampening nodes
 
-* fix bug: program crashes when pressing the
-  reset-button for the 2nd time during a
-  simulation with digital filters
+* clean and release the python sim generator
