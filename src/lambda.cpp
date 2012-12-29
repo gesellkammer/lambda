@@ -3253,6 +3253,19 @@ void lambda::processSim()
 				case 20: // white-noise
 					presPres[srcxy] = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
 					break;
+				case 21: // pink noise
+					white = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
+					b0 = data.mem[src*MEMSRC];
+					b1 = data.mem[src*MEMSRC+1];
+					b2 = data.mem[src*MEMSRC+2];
+					b0 = 0.99765 * b0 + white * 0.0990460;
+					b1 = 0.96300 * b1 + white * 0.2965164; 
+					b2 = 0.57000 * b2 + white * 1.0526913; 
+					presPres[srcxy] += b0 + b1 + b2 + white * 0.1848;  
+					data.mem[MEMSRC*50] = b0;
+					data.mem[src*MEMSRC+1] = b1;
+					data.mem[src*MEMSRC+2] = b2;
+					break;
 			}
 		}
     			
