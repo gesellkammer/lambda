@@ -1,7 +1,11 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'lambda.h'
 **
+<<<<<<< HEAD
 ** Created: Thu Dec 27 20:19:21 2012
+=======
+** Created: Sat Dec 29 14:34:07 2012
+>>>>>>> samples
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!

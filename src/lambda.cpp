@@ -54,6 +54,20 @@ int GFX_MAXFRAMERATE = 500;
 int GFX_STDFRAMERATE = 25;
 int MEMSRC = 20;
 
+simSample** new_simSample_array(int n) {
+	simSample **out = new simSample*[n];
+	simSample *sample;
+	for (int i=0; i<n;i++) {
+		sample = new simSample;
+		sample->data = NULL;
+		sample->sr = 0;
+		sample->id = 0;
+		sample->nsamples = 0;
+		out[i] = sample;
+	}
+	return out;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::lambda()
 //
@@ -385,6 +399,7 @@ void lambda::initVariables()
 	data.velo_right=NULL;
 	data.velo_bottom=NULL;
 	data.mem=NULL;
+	data.samples=NULL;
 
 	resetAll();
 
@@ -441,6 +456,7 @@ void lambda::resetAll()
 	config.rho=0;
 	config.tSample=0;
 	config.fSample=0;
+	
 	// delete simulation environment data pointers
 	if (data.envi!=NULL) {delete[] data.envi; data.envi = NULL;}
 	if (data.angle!=NULL) {delete[] data.angle; data.angle = NULL;}
@@ -452,7 +468,17 @@ void lambda::resetAll()
 	if (data.filt_bottom!=NULL) {delete[] data.filt_bottom; data.filt_bottom = NULL;}
 	if (data.deadnode!=NULL) {delete[] data.deadnode; data.deadnode = NULL;}
 	if (data.boundary!=NULL) {delete[] data.boundary; data.boundary = NULL;}
-	
+	if (data.samples!=NULL) {
+		for (int n=0;n<config.nSamples;n++) {
+			if (data.samples[n]->data != NULL) {
+				delete[] data.samples[n]->data;
+			}
+			delete[] data.samples[n];
+		}
+		delete[] data.samples; data.samples = NULL;
+	}
+	config.nSamples=0;
+
 	// delete receiver pointers
 	if (data.recIdx!=NULL) {delete[] data.recIdx; data.recIdx = NULL;}
 	
@@ -1737,6 +1763,11 @@ template<class T> simError lambda::set(const string what,const T value)
 	{
 		config.nNodes=(int)value;
 		return NONE;
+	} 
+	if (what=="nSamples")
+	{
+		config.nSamples=(int)value;
+		return NONE;
 	}
 	if (what=="tSample")
 	{
@@ -2557,6 +2588,37 @@ simError lambda::loadSimulation(const string fileName)
 		} // x-loop
 	} // y-loop
 
+	// read samples
+	if (!donotreadnextblockid)  // read the chunk header if it is required (see above)
+		simFile.read(pblockid,sizeof(char)*3);
+	set("nSamples", 0);
+	simSample *sample = NULL;
+	if (strncmp(pblockid,"SMP",3)==0) // is it a SMP-chuck
+	{
+		pdummy=new double;
+		simFile.read((char*)pdummy,sizeof(double));
+		set("nSamples", (int)*pdummy);
+		data.samples= new_simSample_array(config.nSamples);
+		for (int n=0;n<config.nSamples;n++)  // read all the samples
+		{
+			sample = data.samples[n];
+			simFile.read((char*)pdummy,sizeof(double));  // read sample ID
+			sample->id = (int)*pdummy;
+			simFile.read((char*)pdummy,sizeof(double));  // read sample SR
+			sample->sr = (int)*pdummy;
+			simFile.read((char*)pdummy,sizeof(double));  // read numsamples
+			sample->nsamples = (int)*pdummy;
+			sample->data = new float[sample->nsamples];  // allocate memory
+			delete[] pdummy;
+			pdummy = new double[sample->nsamples];
+			simFile.read((char*)pdummy,sizeof(double)*sample->nsamples); // read angle-matrix into memory
+			for( int pos=0; pos<sample->nsamples; pos++)				    // convert it to float
+				sample->data[pos] = (float)pdummy[pos];
+			delete[] pdummy;
+		}
+		donotreadnextblockid=false;
+	}
+
 	//  ----- SOURCES -----
 	// read in the sources
 	bool* isvelosource;
@@ -2564,6 +2626,7 @@ simError lambda::loadSimulation(const string fileName)
 	for (int pos=0;pos<config.nNodes;pos++)
 		isvelosource[pos]=false;            // initialize the temp array
 	set("nSrc",0);
+	
 	if (!donotreadnextblockid)  // read the chunk header if it is required (see above)
 		simFile.read(pblockid,sizeof(char)*3);
 	if (strncmp(pblockid,"SRC",3)==0) // is it a SRC-chunk?
@@ -2741,6 +2804,8 @@ float** new_array2(int n) {
 	}
 	return out;
 }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::initSimulation
@@ -3217,17 +3282,6 @@ void lambda::processSim()
 					data.mem[src*MEMSRC+1] = b1;
 					data.mem[src*MEMSRC+2] = b2;
 					break;
-				/*
-				case 30: // looped sample, no interpolation
-					b0 = data.mem[src*MEMSRC];   // sample index 
-					b1 = data.mem[src*MEMSRC+1]; // position in buffer
-					smpl = data.smpls[(int)b0];
-					b2 = smpl.data[(int)b1];
-					data.mem[src*MEMSRC+1] = (b2+1) % smpl.numsamples;
-				*/ 
-
-
-
 			}
 		}
     			
