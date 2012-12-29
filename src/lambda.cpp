@@ -1915,12 +1915,15 @@ template<class T> simError lambda::set(const string what,const T value)
 //
 simError lambda::defineSource(const int idx,const simSource *srcData)
 {
+	cout << "defining source\n";
 	// Check if coordinates are in range of environment size
+	cout << "checking coords\n";
 	if ((srcData->y<0)||(srcData->y>=config.nY)||(srcData->x<0)||(srcData->x>=config.nX)) return SRC_COORDS_BAD;
 	// Check if source has legal source function type
+	cout << "checking type: " << srcData->type << "\n";
 	if ((srcData->type<1)||(srcData->type>100)) return SRC_TYPE_BAD;
 	// Check for positive frequency
-	if (srcData->freq<=0) return SRC_FREQ_BAD;
+	// if (srcData->freq<=0) return SRC_FREQ_BAD;
 	// Add data to source array
 	data.srcs[idx*6+0]=srcData->y*config.nX;
 	data.srcs[idx*6+1]=srcData->x;
@@ -1928,7 +1931,6 @@ simError lambda::defineSource(const int idx,const simSource *srcData)
 	data.srcs[idx*6+3]=srcData->amp;
 	data.srcs[idx*6+4]=srcData->freq;
 	data.srcs[idx*6+5]=srcData->phase;
-
 	int srcxy;
 	srcxy=(int)data.srcs[idx*6+0]+(int)data.srcs[idx*6+1];
 	float alpha;
@@ -2173,6 +2175,7 @@ simError lambda::loadSimulation(const string fileName)
     simFile.read(pblockid,sizeof(char)*3);
 	if (strncmp(pblockid,"DEF",3)==0) // DEF-Chunk exists?
 	{
+		cout << "parsing DEF chunk\n";
     	pdummy=new double[6];
   		simFile.read((char*)pdummy,sizeof(double)*6); // read the data
   		if (error==NONE) error=set("nY",(int)pdummy[0]); // simulation Y-size
@@ -2191,6 +2194,7 @@ simError lambda::loadSimulation(const string fileName)
 	}
 	else    // if no DEF-Chunk exists, close the file and exit
 	{
+		cout << "no DEF-Chunk exists, close the file and exit\n";
 		simFile.close();
 		delete[] pblockid;
 		return FILE_DEF_BLOCK_BAD;
@@ -2201,6 +2205,7 @@ simError lambda::loadSimulation(const string fileName)
 	simFile.read(pblockid,sizeof(char)*3);
 	if (strncmp(pblockid,"ENV",3)==0) // ENV-Chunk exists?
 	{
+		cout << "parsing ENV chunk\n";
     	pdummy=new double[config.nNodes]; // reserve memory for env-data in simfile
     	data.envi=new float[config.nNodes]; // reserve memory for envi-matrix
     	data.deadnode=new bool[config.nNodes]; // reserve mem for deadnode matrix
@@ -2229,6 +2234,7 @@ simError lambda::loadSimulation(const string fileName)
 	simFile.read(pblockid,sizeof(char)*3);
 	if (strncmp(pblockid,"ANG",3)==0) // ANG-Chunk exists?
 	{
+		cout << "parsing ANG chunk\n";
     	pdummy=new double[config.nNodes]; // reserve memory for ang-data in simfile
     	data.angle=new float[config.nNodes]; // reserve memory for angle-matrix
     	simFile.read((char*)pdummy,sizeof(double)*config.nNodes); // read angle-matrix
@@ -2237,8 +2243,9 @@ simError lambda::loadSimulation(const string fileName)
 		delete[] pdummy;
 		donotreadnextblockid=false; // make shure that the next chunk will be read
 	}
-	else if ((strncmp(pblockid,"FLT",3)==0)||(strncmp(pblockid,"SRC",3)==0))
-	{   // if angle-matrix does not exist and the next Chunk is FLT or SRC
+	else if ((strncmp(pblockid,"FLT",3)==0)||(strncmp(pblockid,"SRC",3)==0)||(strncmp(pblockid,"SMP",3)==0))
+	{   // if angle-matrix does not exist and the next Chunk is FLT or SMP or SRC
+		cout << "angle-matrix does not exist and the next Chunk is FLT or SMP or SRC\n";
     	data.angle=new float[config.nNodes]; // create empty angle matrix
     	for (int pos=0;pos<config.nNodes;pos++) // and fill it with 400.f
       		data.angle[pos]=400.f;  // (this means no preemphasis is done on the nodes)
@@ -2246,6 +2253,7 @@ simError lambda::loadSimulation(const string fileName)
 	}
 	else // if angle-matrix does not exist and no valid chunk is following
 	{
+		cout << "angle matrix does not exist and no valid chunk is following\n";
 		simFile.close();
 		delete[] pblockid;
 		return FILE_ANG_BLOCK_BAD;
@@ -2263,6 +2271,7 @@ simError lambda::loadSimulation(const string fileName)
 		simFile.read(pblockid,sizeof(char)*3);
 	if (strncmp(pblockid,"FLT",3)==0) // FLT-Chunk exists?
 	{
+		cout << "parsing FLT chunk\n";
 		pdummy=new double;
 		simFile.read((char*)pdummy,sizeof(double)); // yes, read in number of filters in chunk
 		tmp_numfilters=((int)*pdummy)+1; // one more for the standard 0 filter
@@ -2316,8 +2325,9 @@ simError lambda::loadSimulation(const string fileName)
 		tmp_filtcoeffsB[0][0]=0.f;          // set up the 0 filter
 		donotreadnextblockid=false; // make sure that the next chunk is read
 	}
-	else if (strncmp(pblockid,"SRC",3)==0)	// the FLT-chunk is missing, is this the SRC-
-	{                                       // chunk instead?
+	else if ((strncmp(pblockid,"SRC",3)==0)||(strncmp(pblockid,"SMP",3)==0))	// the FLT-chunk is missing, is this a valid chunk?
+	{
+		cout << "the FLT-chunk is missing, this a valid chunk, initialize filters to 0\n";
 		tmp_numfilters=1;                   // if yes, initialize only the 0 filter
 		tmp_filtid=new int[tmp_numfilters]; // reserve memory for the 0 filter
 		tmp_filtnumcoeffs=new int[tmp_numfilters];	// reserve memory for the 0 filter
@@ -2333,6 +2343,7 @@ simError lambda::loadSimulation(const string fileName)
 	}
 	else  // if FLT-chunk does not exist and no valid chunk is following
 	{
+		cout << "FLT-chunk does not exist and no valid chunk is following\n";
 		simFile.close();
 		delete[] pblockid;
 		return FILE_FLT_BLOCK_BAD;
@@ -2595,29 +2606,44 @@ simError lambda::loadSimulation(const string fileName)
 	simSample *sample = NULL;
 	if (strncmp(pblockid,"SMP",3)==0) // is it a SMP-chuck
 	{
+		cout << "parsing SMP\n";
 		pdummy=new double;
-		simFile.read((char*)pdummy,sizeof(double));
+		simFile.read((char*)pdummy, sizeof(double));
 		set("nSamples", (int)*pdummy);
+		delete[] pdummy;
+		cout << "found " << config.nSamples << " sources\n";
 		data.samples= new_simSample_array(config.nSamples);
 		for (int n=0;n<config.nSamples;n++)  // read all the samples
 		{
+			cout << "reading source " << n << "\n";
+			pdummy=new double;
 			sample = data.samples[n];
 			simFile.read((char*)pdummy,sizeof(double));  // read sample ID
 			sample->id = (int)*pdummy;
+			cout << "IDX: " << sample->id << "\n";
 			simFile.read((char*)pdummy,sizeof(double));  // read sample SR
 			sample->sr = (int)*pdummy;
+			cout << "SR: " << sample->sr << "\n";
 			simFile.read((char*)pdummy,sizeof(double));  // read numsamples
 			sample->nsamples = (int)*pdummy;
+			cout << "nsamples: " << sample->nsamples << "\n";
 			sample->data = new float[sample->nsamples];  // allocate memory
 			delete[] pdummy;
+
 			pdummy = new double[sample->nsamples];
-			simFile.read((char*)pdummy,sizeof(double)*sample->nsamples); // read angle-matrix into memory
+			cout << "reading sample data\n";
+			simFile.read((char*)pdummy,sizeof(double) * sample->nsamples); 
+			cout << "finished reading sample data\n";
 			for( int pos=0; pos<sample->nsamples; pos++)				    // convert it to float
+			{
 				sample->data[pos] = (float)pdummy[pos];
+			}
 			delete[] pdummy;
+			cout << "\nfinished reading samples\n";
 		}
+		cout << "finished reading all samples\n";
 		donotreadnextblockid=false;
-	}
+	} 
 
 	//  ----- SOURCES -----
 	// read in the sources
@@ -2628,15 +2654,21 @@ simError lambda::loadSimulation(const string fileName)
 	set("nSrc",0);
 	
 	if (!donotreadnextblockid)  // read the chunk header if it is required (see above)
+	{
+		cout << "reading block ID\n";
 		simFile.read(pblockid,sizeof(char)*3);
+		cout << "found: " << pblockid << "\n";
+	} else
+		cout << "skipping reading blockid for SRC chunk\n";
 	if (strncmp(pblockid,"SRC",3)==0) // is it a SRC-chunk?
 	{
+		cout << "parsing SRC chunk\n";
 		pdummy=new double;
 		simFile.read((char*)pdummy,sizeof(double)); // yes, read in the number of sources
 		set("nSrc",(int)*pdummy);
 		data.srcs=new float[config.nSrc*6];   // reserve memory for the sources
 		data.mem=new float[config.nSrc*MEMSRC]; // sources extra data
-		for (int n=0;n<config.nSrc*MEMSRC;n++) data.mem[n] = 0;
+		for (int n=0;n<config.nSrc*MEMSRC;n++) data.mem[n] = 0.0;  // clear state memory for all sources
 		for (int n=0;n<config.nSrc;n++) // work through all the sources
 		{
 			simFile.read((char*)pdummy,sizeof(double)); // read src y-position
@@ -2651,15 +2683,24 @@ simError lambda::loadSimulation(const string fileName)
 			curSource.freq=(float)*pdummy;
 			simFile.read((char*)pdummy,sizeof(double)); // read src phase angle
 			curSource.phase=(float)*pdummy;
-			defineSource(n,&curSource);                 // and add the source to the simulation
 			// if the source type is between 6 and 10, then it is a velocity source:
 			if ((curSource.type>=6)&&(curSource.type<=10))
 				isvelosource[(int)curSource.y*(int)config.nX+(int)curSource.x]=true;
+			if ((curSource.type==30))
+			{
+				sample = data.samples[(int)curSource.freq];
+				cout << "sample source: IDX SR NSAMPLES " << sample->id << " " << sample->sr << " " << sample->nsamples << "\n";
+			}
+			defineSource(n, &curSource);                 // and add the source to the simulation
+			cout << "finished defining source of type " << curSource.type;
+
 		}
 		delete pdummy;
 	}
 	else // no SRC-chunk found --> delete all our work we've done so far
 	{
+		cout << "no SRC-chunk found, found instead " << pblockid << "\n";
+		cout << "no SRC-chunk found --> delete all our work we've done so far\n";
 		simFile.close();
 		delete[] pblockid;
 		delete[] isvelosource;
@@ -3086,7 +3127,8 @@ void lambda::processSim()
 			float twopi_freq = twopi*freq;
 			float onepi_phi_180 = onepi*phi/180.f;
 			float b0, b1, b2, white;
-			
+			int samplepos, mempos;
+			simSample *sample;
 			switch(type)
 			{
 				case 1: // sinusoidal source
@@ -3270,18 +3312,25 @@ void lambda::processSim()
 					presPres[srcxy] += amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
 					break;
 				case 21: // pink noise
+					mempos = src*MEMSRC;
 					white = amp * ((rand() % 32767) / 32767.f * 2.f - 1.f);
-					b0 = data.mem[src*MEMSRC];
-					b1 = data.mem[src*MEMSRC+1];
-					b2 = data.mem[src*MEMSRC+2];
+					b0 = data.mem[mempos];
+					b1 = data.mem[mempos+1];
+					b2 = data.mem[mempos+2];
 					b0 = 0.99765 * b0 + white * 0.0990460;
 					b1 = 0.96300 * b1 + white * 0.2965164; 
 					b2 = 0.57000 * b2 + white * 1.0526913; 
 					presPres[srcxy] += b0 + b1 + b2 + white * 0.1848;  
-					data.mem[MEMSRC*50] = b0;
-					data.mem[src*MEMSRC+1] = b1;
-					data.mem[src*MEMSRC+2] = b2;
+					data.mem[mempos] = b0;
+					data.mem[mempos+1] = b1;
+					data.mem[mempos+2] = b2;
 					break;
+				case 30: // sample
+					mempos = src*MEMSRC;
+					sample = data.samples[(int)freq];  // freq contains the sample id
+					samplepos = (int)data.mem[mempos];  // read position
+					presPres[srcxy] = sample->data[samplepos] *amp;  // read individual sample, scale it to amp
+					data.mem[mempos] = (float)((samplepos+1) % sample->nsamples);  // advance read position, loop if at end
 			}
 		}
     			
