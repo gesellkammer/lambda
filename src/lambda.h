@@ -84,6 +84,15 @@ struct simConfig{
 	float rho;      // air density in kg/m^3, needed for velocity sources
 	float tSample;	// tsample=1/fsample, sampling period
 	float fSample;	// sampling frequency in Hz
+	int nSamples;  // number of embedded samples for sources
+};
+
+// Sample Data
+struct simSample {
+	int id;
+	int sr;
+	int nsamples;
+	float *data;
 };
 
 // This struct contains specific data about the simulation environment.
@@ -126,6 +135,7 @@ struct simData{
 	float *velo_top;    // array containing the actual velocity of velo sources from top dir.
 	float *velo_right;  // array containing the actual velocity of velo sources from right dir.
 	float *velo_bottom; // array containing the actual velocity of velo sources from bottom dir.
+	simSample **samples; // contains sample data from soundfiles embedded in the simulation
 };
 
 // Indices used during simulation process.
@@ -200,6 +210,8 @@ struct simFiles{
 	int videoStream;
 	Revel_VideoFrame videoFrame;
 };
+
+
 
 // Source data.
 struct simSource{
