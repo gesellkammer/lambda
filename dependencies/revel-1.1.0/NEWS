@@ -1,0 +1,17 @@
+ - Added support for encoding audio tracks!  See the new
+   Revel_EncodeAudio() function for details.
+ - Added Revel_InitializeParams() function, used to initialize
+   a Revel_Params object to safe default values.  Every Revel application
+   should call this function!
+ - Added Revel_GetVersion() and Revel_GetApiVersion() functions,
+   for testing binary compatibility between different versions of Revel.
+
+10/26/2004 -- Version 1.0.1 is released
+ - Fixed compatibility problems with Cygwin and DJGPP.
+ - Adding missing header files to avilib.c; their absence would cause
+   Revel_EncodeEnd() to fail on certain platforms.  (Found & fixed by
+   Julien Monville).
+
+09/12/2004 -- Version 1.0pre1 is released
+ - Initial public release
+ - It works!  Use it!

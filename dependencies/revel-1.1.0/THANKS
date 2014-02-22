@@ -1,0 +1,17 @@
+Revel THANKS file
+
+Revel has originall been written by Cort Stratton.
+Many people further contributed to Revel by reporting problems,
+suggesting various improvements or submitteing actual code.
+Here is a list of these people.  Help me keep it complete and
+exempt of errors.
+
+avilib.c/.h were originally written by Thomas Östreich, and
+later modified by Cort Stratton.
+
+Revel uses the XviD video codec, whose chief developers are
+Christoph Lampert, Edouard Gomez, Michael Militzer, Peter Ross
+and Radek Czyz.
+
+Bugs were submitted and fixed by:
+Julien Monville
