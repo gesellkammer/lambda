@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET += 
 DEPENDPATH += .
-INCLUDEPATH += . /opt/X11/include/X11 /usr/include/malloc /opt/local/include
+INCLUDEPATH += . /opt/X11/include /usr/include/malloc /opt/local/include
 CONFIG += qt
 LIBS += -L. -lrevel -lxvidcore -lX11 -L/opt/X11/lib -L/opt/local/lib
 
