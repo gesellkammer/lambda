@@ -29,6 +29,8 @@ using std::string;
 #include <map>
 using std::map;
 
+#include <iostream>
+
 namespace
 {
     typedef map<int,Revel_BaseEncoder*> EncoderMap;
@@ -115,11 +117,12 @@ Revel_Error Revel_EncodeStart(int encoderHandle, const char* filename,
     {
         Revel_BaseEncoder *newEnc = NULL;
         Revel_Error revError = EncoderFactory(params->codec, &newEnc);
-        if (revError != REVEL_ERR_NONE)
+        if (revError != REVEL_ERR_NONE) {
             return revError;
+        };
         g_encoders[encoderHandle] = newEnc;
     }
-
+    
     return g_encoders[encoderHandle]->EncodeStart(filename, *params);
 }
 

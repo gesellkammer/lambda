@@ -68,6 +68,8 @@ simSample** new_simSample_array(int n) {
 	return out;
 }
 
+#define DEBUG_ENCODING
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::lambda()
 //
@@ -1335,14 +1337,25 @@ void lambda::rco()
 //
 void lambda::avi()
 {
+	Revel_Error error;
  	if (gui.aviBox->isChecked()){
 		// If encoder got switched ON, create file name first (see lambda::rce())
 		char *dot = strrchr((char *)files.lastFileName.c_str(),'.');
-		if (dot!=NULL) memset(dot,'\0',strlen(dot));
-		files.lastFileName = (char *)files.lastFileName.c_str(); files.lastFileName+=".avi";
+		if (dot != NULL) {
+			memset(dot, '\0', strlen(dot));
+		};
+			
+		files.lastFileName = (char *)files.lastFileName.c_str();
+		files.lastFileName += ".avi";
 
 		// Initialize and setup Revel encoder (see revel documentation for references)
-		Revel_CreateEncoder(&files.videoStream);
+		files.videoStream = -2;
+		error = Revel_CreateEncoder(&files.videoStream);
+		if( error != 0) {
+			cout << "error creating encoder: " << error << "\n";
+		} else {
+			cout << "created encoder-stream: " << files.videoStream << "\n";
+		}
 
 		Revel_Params videoParams;
 		Revel_InitializeParams(&videoParams);
@@ -1352,7 +1365,18 @@ void lambda::avi()
 		videoParams.quality = graphics.quality/100;
 		videoParams.codec = REVEL_CD_XVID;
 		videoParams.hasAudio = 0;
-		Revel_EncodeStart(files.videoStream,(char *)files.lastFileName.c_str(), &videoParams);
+		error = Revel_EncodeStart(files.videoStream, (char *)files.lastFileName.c_str(), &videoParams);
+		if( error != 0) {
+			cout << "error starting encoder: " << error << "\n";
+		};
+		if( 1 ) {
+			cout << "lastFileName: " << (char *)files.lastFileName.c_str() << "\n";
+			cout << "width:  " << videoParams.width << "\n";
+			cout << "height: " << videoParams.height << "\n";
+			cout << "frameRate:" << videoParams.frameRate << "\n";
+			cout << "quality: " << videoParams.quality << "\n";
+			cout << "codec:  " << videoParams.codec << "\n";
+		};
 
 		files.videoFrame.width = config.nX;
 		files.videoFrame.height = config.nY;
@@ -1592,10 +1616,13 @@ void lambda::processAvi()
 	if (boundsbox_checked) {
 		for (int k=0; k<config.nNodes; k++){
 			pixValue = (int)*(frame.data+k);
-			if (pixValue<0) pixValue = 0;
-			else if (pixValue>255) pixValue = 255;
+			if (pixValue<0) 
+				pixValue = 0;
+			else if (pixValue>255) 
+				pixValue = 255;
 			// draw walls and receivers
-			if (abs(data.envi[k])!=0.f) pixValue=255;
+			if (abs(data.envi[k])!=0.f) 
+				pixValue=255;
 			// Copy clipping-free pixel info into videoframe (convert to hex!)
 			// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
 			*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
@@ -1604,15 +1631,26 @@ void lambda::processAvi()
 	else {
 		for (int k=0; k<config.nNodes; k++){
 				pixValue = (int)*(frame.data+k);
-				if (pixValue<0) pixValue = 0;
-				else if (pixValue>255) pixValue = 255;
+				if (pixValue<0) 
+					pixValue = 0;
+				else if (pixValue>255) 
+					pixValue = 255;
 				// Copy clipping-free pixel info into videoframe (convert to hex!)
 				// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
 				*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
 			}	
 	}
 	// Encode this frame and add it to the video file
-	Revel_EncodeFrame(files.videoStream,&files.videoFrame,&videoFrameSize);
+	Revel_Error error = Revel_EncodeFrame(files.videoStream, &files.videoFrame, &videoFrameSize);
+	if( error != 0 ) {
+		// EDU
+		cout << "Error encoding frame: " << config.n << " --- error number: " << error << "\n" << std::flush;
+		gui.stopButton->click();
+
+	} else {
+		if(config.n % 100 == 0)
+			cout << "encoding frame: " << config.n << "\r";
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2686,14 +2724,13 @@ simError lambda::loadSimulation(const string fileName)
 			// if the source type is between 6 and 10, then it is a velocity source:
 			if ((curSource.type>=6)&&(curSource.type<=10))
 				isvelosource[(int)curSource.y*(int)config.nX+(int)curSource.x]=true;
-			if ((curSource.type==30))
+			if (curSource.type==30)
 			{
 				sample = data.samples[(int)curSource.freq];
-				cout << "sample source: IDX SR NSAMPLES " << sample->id << " " << sample->sr << " " << sample->nsamples << "\n";
+				cout << "sample source: IDX=" << sample->id << " SR=" << sample->sr << " NSAMPLES=" << sample->nsamples << " DURATION(ms)=" << (sample->nsamples*1000)/sample->sr << "\n";
 			}
 			defineSource(n, &curSource);                 // and add the source to the simulation
-			cout << "finished defining source of type " << curSource.type;
-
+			cout << "finished defining source of type " << curSource.type << "\n";
 		}
 		delete pdummy;
 	}
@@ -3487,7 +3524,7 @@ void lambda::processSim()
 		if (gui.aviBox->isChecked()) if (config.n%graphics.skip==0) processAvi();
 		if (gui.visBox->isChecked()) if (config.n%graphics.skip==0)	processVis();
 		// update the progress indicator every 20th iteration
-		if ((config.n%50==0)&&(config.nN!=0))
+		if ((config.n%100==0)&&(config.nN!=0))
 		{
 			int progress=(int)((float)config.n*10.f/(float)config.nN);
 			switch(progress)

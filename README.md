@@ -10,17 +10,18 @@ Features
 ========
 
 * general
-  - simulation of wave propagation in 2-dimensional environments
+  - FDTD simulation of wave propagation in 2-dimensional environments
   - reflective walls with real-valued reflection coefficients
   - reflective walls with digital filters
   - various pressure source types
   - various velocity source types
+  - cross-platform: Linux, OSX (>= 10.4, tested up to 10.9), Windows
 * output
   - visualization
   - sound pressure characteristics at receiver nodes
   - simulation recorder
   - AVI encoder
-  - BMP screenshots
+  - screenshots
 * input
   - binary user-generates sim files
   - recorded simulations
@@ -30,7 +31,9 @@ Features
 * documentation
   - manual
   - flow charts
-
+* scripting
+  - lambda simulations can be written in python using
+    shapely to define shapes
 
 Installation
 ============

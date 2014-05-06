@@ -24,6 +24,11 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <cassert>
 #include <cstring>
 #include <string>
+
+#ifdef DEBUG
+    #include <iostream>
+#endif
+
 using std::string;
 
 namespace
@@ -189,7 +194,11 @@ int Revel_XvidEncoder::CreateXvidEncoder(void **encoderOut)
 
     int xerr = xvid_encore(NULL, XVID_ENC_CREATE, &xvid_enc_create, NULL);
 
-	// Retrieve the encoder instance from the structure
+    #ifdef DEBUG
+        std::cout << "version, width, height, interval: " << xvid_enc_create.version << " " << xvid_enc_create.width << " " << xvid_enc_create.height << " " << xvid_enc_create.max_key_interval << "\n";
+    #endif
+
+    // Retrieve the encoder instance from the structure
 	*encoderOut = xvid_enc_create.handle;
 
 	return xerr;
@@ -200,14 +209,29 @@ int Revel_XvidEncoder::CreateXvidEncoder(void **encoderOut)
 Revel_Error Revel_XvidEncoder::EncodeStart(const string& filename,
                                       const Revel_Params& params)
 {
+    #ifdef DEBUG
+        std::cout << "EncodeStart" << std::endl;
+    #endif
+
     Revel_Error revError = Revel_BaseEncoder::EncodeStart(filename, params);
-    if (revError != REVEL_ERR_NONE)
+    if (revError != REVEL_ERR_NONE) {
         return revError;
+    }
         
     // Create XviD encoder
     int error = CreateXvidEncoder(&m_xvidEncoderHandle);
-    if (error != 0 || m_xvidEncoderHandle == NULL)
+    if (error != 0) {
+        #ifdef DEBUG
+            std::cout << "Error creating XvidEncoder: " << error << std::endl;
+        #endif
+        Reset();
+        return REVEL_ERR_UNKNOWN;   
+    }
+    if (m_xvidEncoderHandle == NULL)
     {
+        #ifdef DEBUG
+            std::cout << "Error creating handle to xvid encoder" << std::endl;
+        #endif
         Reset();
         return REVEL_ERR_UNKNOWN;
     }

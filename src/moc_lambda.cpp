@@ -1,8 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'lambda.h'
 **
-** Created: Fri Feb 21 22:03:46 2014
-**      by: The Qt Meta Object Compiler version 63 (Qt 4.8.3)
+** Created by: The Qt Meta Object Compiler version 63 (Qt 4.8.5)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +10,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'lambda.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 63
-#error "This file was generated using the moc from 4.8.3. It"
+#error "This file was generated using the moc from 4.8.5. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -31,30 +30,30 @@ static const uint qt_meta_data_lambda[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-       8,    7,    7,    7, 0x08,
-      15,    7,    7,    7, 0x08,
-      21,    7,    7,    7, 0x08,
-      27,    7,    7,    7, 0x08,
-      33,    7,    7,    7, 0x08,
-      39,    7,    7,    7, 0x08,
-      52,    7,    7,    7, 0x08,
-      60,    7,    7,    7, 0x08,
-      67,    7,    7,    7, 0x08,
-      74,    7,    7,    7, 0x08,
-      87,    7,    7,    7, 0x08,
-     100,    7,    7,    7, 0x08,
-     114,    7,    7,    7, 0x08,
-     124,    7,    7,    7, 0x08,
-     134,    7,    7,    7, 0x08,
-     147,    7,    7,    7, 0x08,
-     162,    7,    7,    7, 0x08,
-     175,    7,    7,    7, 0x08,
+       7,   14,   14,   14, 0x08,
+      15,   14,   14,   14, 0x08,
+      21,   14,   14,   14, 0x08,
+      27,   14,   14,   14, 0x08,
+      33,   14,   14,   14, 0x08,
+      39,   14,   14,   14, 0x08,
+      52,   14,   14,   14, 0x08,
+      60,   14,   14,   14, 0x08,
+      67,   14,   14,   14, 0x08,
+      74,   14,   14,   14, 0x08,
+      87,   14,   14,   14, 0x08,
+     100,   14,   14,   14, 0x08,
+     114,   14,   14,   14, 0x08,
+     124,   14,   14,   14, 0x08,
+     134,   14,   14,   14, 0x08,
+     147,   14,   14,   14, 0x08,
+     162,   14,   14,   14, 0x08,
+     175,   14,   14,   14, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_lambda[] = {
-    "lambda\0\0open()\0vis()\0rce()\0rco()\0avi()\0"
+    "lambda\0open()\0\0vis()\0rce()\0rco()\0avi()\0"
     "showbounds()\0start()\0stop()\0snap()\0"
     "processSim()\0processRep()\0setContrast()\0"
     "setZoom()\0setSkip()\0setQuality()\0"
