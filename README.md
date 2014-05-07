@@ -1,51 +1,49 @@
 
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/pics/icon128.png)
 
-LAMBDA
-======
+# LAMBDA
 
-Readme
-------
+## Features
 
-Features
-========
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/pics/angled-muffler.png)
 
 * general
-  - FDTD simulation of wave propagation in 2-dimensional environments
-  - reflective walls with real-valued reflection coefficients
-  - reflective walls with digital filters
-  - various pressure source types
-  - various velocity source types
-  - cross-platform: Linux, OSX (>= 10.4, tested up to 10.9), Windows
+	- FDTD simulation of wave propagation in 2-dimensional environments
+	- reflective walls with real-valued reflection coefficients
+	- reflective walls with digital filters
+	- various pressure source types
+	- various velocity source types
+	- cross-platform: Linux, OSX (>= 10.4, tested up to 10.9), Windows	
 * output
-  - visualization
-  - sound pressure characteristics at receiver nodes
-  - simulation recorder
-  - AVI encoder
-  - screenshots
+	- visualization
+	- sound pressure characteristics at receiver nodes
+	- simulation recorder
+	- AVI encoder
+	- screenshots
 * input
-  - binary user-generates sim files
-  - recorded simulations
+	- binary user-generates sim files
+	- recorded simulations
 * demos
-  - example simulations
-  - scripts for creating sim files and reading receiver output
+	- example simulations
+	- scripts for creating sim files and reading receiver output
 * documentation
-  - manual
-  - flow charts
+	- manual
+	- flow charts
 * scripting
-  - lambda simulations can be written in python using
-    shapely to define shapes
+	- lambda simulations can be written in python using shapely to define shapes
 
 Installation
 ============
 
-See INSTALL for instructions.
+See [INSTALL] for instructions.
 
 
 Usage
 =====
 
-Please refer to the manual in the docs directory.
+Please refer to the [manual](https://github.com/gesellkammer/lambda/blob/master/doc/lambda-manual.md) in the docs directory.
 
+------------------------
 
 Copyright
 =========
@@ -157,3 +155,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 or visit http://www.gnu.org/licenses/gpl.html
+
+
+
+
+
+[INSTALL]: https://github.com/gesellkammer/lambda/blob/master/INSTALL.md
