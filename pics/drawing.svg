@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48+devel r10221"
+   sodipodi:docname="drawing.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient952"
+       osb:paint="gradient">
+      <stop
+         style="stop-color:#ff7d7d;stop-opacity:1;"
+         offset="0"
+         id="stop954" />
+      <stop
+         id="stop956"
+         offset="1"
+         style="stop-color:#ffcdcd;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient934">
+      <stop
+         id="stop942"
+         offset="0"
+         style="stop-color:#ffa3a3;stop-opacity:1;" />
+      <stop
+         style="stop-color:#ffb0b0;stop-opacity:0;"
+         offset="1"
+         id="stop938" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="48.00831"
+     inkscape:cy="315.45465"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1280"
+     inkscape:window-height="756"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#00e6ff;stroke-width:4.89124775;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect79"
+       width="486.45404"
+       height="486.41437"
+       x="2.6621132"
+       y="-0.028147286"
+       ry="21.758411"
+       inkscape:export-filename="/Users/em/dev/lambda/src/pics/icon16.png"
+       inkscape:export-xdpi="2.9300001"
+       inkscape:export-ydpi="2.9300001" />
+    <path
+       style="fill:#119fe6;fill-opacity:1;stroke:none"
+       d="m 146.21581,244.15714 0,-224.968099 18.45441,0 18.45442,0 0,224.968099 0,224.96811 -18.45442,0 -18.45441,0 0,-224.96811 z m 224.96807,0 0,-187.180486 18.45441,0 18.45442,0 0,187.180486 0,187.1805 -18.45442,0 -18.45441,0 0,-187.1805 z m -281.21012,0 0,-112.48405 18.45444,0 18.45441,0 0,112.48405 0,112.48406 -18.45441,0 -18.45444,0 0,-112.48406 z m 112.48408,0 0,-112.48405 18.45441,0 18.45442,0 0,112.48405 0,112.48406 -18.45442,0 -18.45441,0 0,-112.48406 z m 112.48401,0 0,-112.48405 18.45441,0 18.45442,0 0,112.48405 0,112.48406 -18.45442,0 -18.45441,0 0,-112.48406 z m -281.210115,0 0,-56.24203 18.454415,0 18.45442,0 0,56.24203 0,56.24203 -18.45442,0 -18.454415,0 0,-56.24203 z m 224.968085,0 0,-56.24203 18.45442,0 18.45441,0 0,56.24203 0,56.24203 -18.45441,0 -18.45442,0 0,-56.24203 z m 168.72608,0 0,-56.24203 18.45442,0 18.45441,0 0,56.24203 0,56.24203 -18.45441,0 -18.45442,0 0,-56.24203 z"
+       id="path75"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/em/dev/lambda/src/pics/icon16.png"
+       inkscape:export-xdpi="2.9300001"
+       inkscape:export-ydpi="2.9300001" />
+    <path
+       style="fill:#119fe6;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       d="M 183.24473,19.462945 371.33513,430.29198"
+       id="path982"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/em/dev/lambda/src/pics/icon16.png"
+       inkscape:export-xdpi="2.9300001"
+       inkscape:export-ydpi="2.9300001" />
+  </g>
+</svg>

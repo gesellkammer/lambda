@@ -235,8 +235,9 @@ void lambda::initGui(const char *name)
 	gui.statusLine->setAlignment(Qt::AlignHCenter);
 	// Initialize copyright label
 	gui.copyright1 = new QLabel(this);
-	gui.copyright1->setText("&#169;2006-2009 IHA Oldenburg<br>M.Ruhland, M.Blau,<br>and others");
-	gui.copyright1->setAlignment(Qt::AlignRight);
+	//gui.copyright1->setText("&#169;IHA Oldenburg<br>M.Ruhland, M.Blau,<br>and others");
+	//gui.copyright1->setAlignment(Qt::AlignRight);
+	//gui.copyright1->setAlignment(Qt::AlignCenter);
 	// Initialize layout for input section
 	QHBoxLayout *inputLayout = new QHBoxLayout;
 	// Add open file button to the input section
