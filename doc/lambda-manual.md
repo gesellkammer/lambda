@@ -1,11 +1,6 @@
 # Lambda 2.1
 
-![](lambda.gif)
-
-simon.ahrens at stud.fh-oldenburg.de
-matthias.blau at fh-oldenburg.de
-marco.ruhland at stud.fh-oldenburg.de
-[www.hoertechnik-audiologie.de](www.hoertechnik-audiologie.de)
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/doc/lambda.gif)
 
 ## Contents
 
@@ -14,19 +9,19 @@ marco.ruhland at stud.fh-oldenburg.de
 		1.1.1 [Linux][linbin]  
 		1.1.2 [Windows][winbin]   
 		1.1.3 [OSX][osxbin]
-	1.2	Building from source
-		1.2.1 Linux 
-		1.2.2 Windows
-		1.2.3 OSX
 		
-2. Simulation input
-	2.1 Overview
-	2.2 Sim files
-	2.3 Using the scripts
-	2.4 Geometry and coordinate conventions
+	1.2	Building from source  
+		1.2.1 Linux   
+		1.2.2 Windows  
+		1.2.3 OSX  
+		
+2. Simulation input  
+	2.1 Overview  
+	2.2 Sim files  
+	2.3 Using the scripts  
+	2.4 Geometry and coordinate conventions  
 	
-3. Using Lambda
-	3.1 
+3. Using Lambda  
 
 # 1. INSTALLATION [Installation] #
 
@@ -330,7 +325,7 @@ If you want to use the more advanced techniques like digital filters etc., see t
 
 This image demonstrates the conventions for coordinates in Lambda:
 
-![](./coords.gif)
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/doc/coords.gif)
 
 Coordinates are always in format (Y,X), so in this example, b is at (2,4). a represents (1,1), c is at (YSIZE,XSIZE), d is (1,XSIZE) and e is at position (YSIZE,1).
 
@@ -407,4 +402,13 @@ All arguments can be combined together, calling order is irrelevant.
 
 TODO
 
-[osxbin]: 
+---------------
+
+simon.ahrens@stud.fh-oldenburg.de  
+matthias.blau@fh-oldenburg.de  
+marco.ruhland@stud.fh-oldenburg.de  
+[www.hoertechnik-audiologie.de](www.hoertechnik-audiologie.de)
+
+
+
+[osxbin]: https://github.com/gesellkammer/lambda/raw/master/dist
