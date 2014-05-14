@@ -2643,21 +2643,21 @@ simError lambda::loadSimulation(const string fileName)
 		simFile.read(pblockid,sizeof(char)*3);
 	set("nSamples", 0);
 	simSample *sample = NULL;
-	if (strncmp(pblockid,"SMP",3)==0) // is it a SMP-chuck
+	if (strncmp(pblockid, "SMP", 3) == 0) // is it a SMP-chuck
 	{
 		cout << "parsing SMP\n";
-		pdummy=new double;
+		pdummy = new double;
 		simFile.read((char*)pdummy, sizeof(double));
 		set("nSamples", (int)*pdummy);
 		delete[] pdummy;
 		cout << "found " << config.nSamples << " sources\n";
-		data.samples= new_simSample_array(config.nSamples);
+		data.samples = new_simSample_array(config.nSamples);
 		for (int n=0;n<config.nSamples;n++)  // read all the samples
 		{
 			cout << "reading source " << n << "\n";
-			pdummy=new double;
+			pdummy = new double;
 			sample = data.samples[n];
-			simFile.read((char*)pdummy,sizeof(double));  // read sample ID
+			simFile.read((char*)pdummy, sizeof(double));  // read sample ID
 			sample->id = (int)*pdummy;
 			cout << "IDX: " << sample->id << "\n";
 			simFile.read((char*)pdummy,sizeof(double));  // read sample SR
@@ -2702,30 +2702,31 @@ simError lambda::loadSimulation(const string fileName)
 	if (strncmp(pblockid,"SRC",3)==0) // is it a SRC-chunk?
 	{
 		cout << "parsing SRC chunk\n";
-		pdummy=new double;
-		simFile.read((char*)pdummy,sizeof(double)); // yes, read in the number of sources
-		set("nSrc",(int)*pdummy);
-		data.srcs=new float[config.nSrc*6];   // reserve memory for the sources
-		data.mem=new float[config.nSrc*MEMSRC]; // sources extra data
-		for (int n=0;n<config.nSrc*MEMSRC;n++) data.mem[n] = 0.0;  // clear state memory for all sources
-		for (int n=0;n<config.nSrc;n++) // work through all the sources
-		{
+		pdummy = new double;
+		simFile.read((char*)pdummy, sizeof(double)); // yes, read in the number of sources
+		set("nSrc", (int)*pdummy);
+		data.srcs = new float[config.nSrc*6];      // reserve memory for the sources
+		data.mem  = new float[config.nSrc*MEMSRC]; // sources extra data
+		for (int n=0; n < config.nSrc*MEMSRC; n++) 
+			data.mem[n] = 0.0;  
+		for (int n=0; n < config.nSrc; n++) { 
 			simFile.read((char*)pdummy,sizeof(double)); // read src y-position
-			curSource.y=(int)*pdummy-1;
-			simFile.read((char*)pdummy,sizeof(double)); // read src x-position
-			curSource.x=(int)*pdummy-1;
-			simFile.read((char*)pdummy,sizeof(double)); // read src type
-			curSource.type=(float)*pdummy;
-			simFile.read((char*)pdummy,sizeof(double)); // read src amplitude
-			curSource.amp=(float)*pdummy;
-			simFile.read((char*)pdummy,sizeof(double)); // read src frequency
-			curSource.freq=(float)*pdummy;
-			simFile.read((char*)pdummy,sizeof(double)); // read src phase angle
-			curSource.phase=(float)*pdummy;
+			curSource.y = (int)*pdummy-1;
+			simFile.read((char*)pdummy, sizeof(double)); // read src x-position
+			curSource.x = (int)*pdummy-1;
+			simFile.read((char*)pdummy, sizeof(double)); // read src type
+			curSource.type = (float)*pdummy;
+			simFile.read((char*)pdummy, sizeof(double)); // read src amplitude
+			curSource.amp = (float)*pdummy;
+			simFile.read((char*)pdummy, sizeof(double)); // read src frequency
+			curSource.freq = (float)*pdummy;
+			simFile.read((char*)pdummy, sizeof(double)); // read src phase angle
+			curSource.phase = (float)*pdummy;
 			// if the source type is between 6 and 10, then it is a velocity source:
-			if ((curSource.type>=6)&&(curSource.type<=10))
-				isvelosource[(int)curSource.y*(int)config.nX+(int)curSource.x]=true;
-			if (curSource.type==30)
+			if ((curSource.type >= 6) && (curSource.type <= 10))
+				isvelosource[(int)curSource.y*(int)config.nX+(int)curSource.x] = true;
+			// a sample source
+			if (curSource.type==30) 
 			{
 				sample = data.samples[(int)curSource.freq];
 				cout << "sample source: IDX=" << sample->id << " SR=" << sample->sr << " NSAMPLES=" << sample->nsamples << " DURATION(ms)=" << (sample->nsamples*1000)/sample->sr << "\n";

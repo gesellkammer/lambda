@@ -13,3 +13,8 @@ LIBS += -L. -lrevel -lxvidcore -lX11 -L/opt/X11/lib -L/opt/local/lib
 # Input
 HEADERS += CImg.h lambda.h revel.h
 SOURCES += lambda.cpp main.cpp
+
+ICON = Icon.icns
+     
+QMAKE_INFO_PLIST = Info.plist
+OTHER_FILES += Info.plist
