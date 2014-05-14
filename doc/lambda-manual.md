@@ -1,6 +1,6 @@
 # Lambda 2.1
 
-![](https://raw.githubusercontent.com/gesellkammer/lambda/master/doc/lambda.gif)
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/pics/icon2/lambdaicon128.png)
 
 ## Contents
 
@@ -15,13 +15,15 @@
 		1.2.2 Windows  
 		1.2.3 OSX  
 		
-2. Simulation input  
+2. Usage
+		
+3. Simulation input  
 	2.1 Overview  
 	2.2 Sim files  
 	2.3 Using the scripts  
 	2.4 Geometry and coordinate conventions  
 	
-3. Using Lambda  
+4. Using the Lambda binary
 
 # 1. INSTALLATION [Installation] #
 
@@ -40,6 +42,21 @@ If you have the Linux package (suffix "glx"), simply extract the contents of "bi
 ### 1.1.2 Windows [winbin]
 
 If you have the Windows package (suffix "w32"), extract the contents of "bin" from the zipped archive to a path of choice, e.g. "C:\Lambda". Extract the directories "examples", "doc" and "scripts" to the same directory if you intend to use them. 
+
+### 1.1.3 OSX [osxbin]
+
+* Install [X11](http://xquartz.macosforge.org/landing/)
+* Install Qt4
+
+Lambda depends on the Qt4 library being present in your system. Currently the best way to install Qt4 is via [Homebrew](http://brew.sh/).
+
+	$ brew install qt
+	
+* Download the [Lambda.app](https://github.com/gesellkammer/lambda/raw/master/dist)
+
+Copy Lambda.app to your /Applications folder
+
+---
 
 ## 1.2 Building from source
 
@@ -82,6 +99,8 @@ Since compiling the AVI encoder creates a lot of problems on Windows machines, t
 
 ### 1.2.3 OSX 
 
+#### Install from source
+
 Required software:
 
 * Trolltech Qt 4
@@ -104,26 +123,46 @@ Compile and install revel (used for video output). If you installed libxvid via 
 	$ make
 	$ sudo make install
 	
-Modify the following lines in src/lambda.pro to match your system. An Example:
+Modify the following lines in src/Lambda-OSX.pro to match your system. An Example:
 
 	INCLUDEPATH += . /opt/X11/include/X11 /usr/include/malloc /opt/local/include
 	LIBS += -L. -lrevel -lxvidcore -lX11 -L/opt/X11/lib -L/opt/local/lib
 	
-Now run `qmake`
+Now run:
 
-	$ qmake
+	$ qmake Lambda-OSX.pro
 	
-This will generate an XCode project (`lambda.xcodeproj`). Open it and compile it. In `src` you should have now a new folder `build` with a `lambda.app` inside. First launch `X11` (`XQuartz`) and then open the app. If `X11` is not running, you will not be able to open the visualization window. 
+This will generate a Makefile. Modify it to match your system if necessary. Then:
 
-#  2. SIMULATION INPUT 
+	$ make
+	
+In `src` you should have now see a `Lambda.app` inside. Move it to `/Applications`. Then launch `X11` (`XQuartz`) and open the app. If `X11` is not running, you will not be able to open the visualization window.
 
-##  2.1 Overview 
+# 2. Usage
+
+## Open a simulation
+
+* Start XQuartz.app (this is needed to display simulations)
+* Start Lambda.app
+* Click on the button `Open file`. ![](https://raw.githubusercontent.com/gesellkammer/lambda/master/doc/openfile.png)
+* If you installed `Lambda` from source, you will find some examples in the `sims` folder. Otherwise look in the [github repo](https://github.com/gesellkammer/lambda/tree/master/sims). Click on one of the .sim files and then on `Raw`: this will download the file.
+
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/doc/open-sim-from-github.png)
+
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/doc/download-sim.png)
+
+
+
+
+# 3. SIMULATION INPUT 
+
+##  Overview 
 
 To run a simulation, Lambda must be provided with information about the simulated environment. Most of this information can be fed into Lambda in binary sim files containing certain data in a certain structure described below. The easiest way to create sim files is to use the included scripts for Scilab (freeware) and Matlab.
 The new version 2.0 of Lambda offers new features like frequency dependent boundary conditions and velocity sources. Since these features require some definitions that the old sim file format could not offer, a new sim file format had to be introduced. Unfortunately, **this means that the actual version 2.0 is no longer compatible to older sim files which have been generated for the usage with Lambda 1.2! But you can use the script "converter.m" or "converter.sce" to transform your old 1.x sim files into the new 2.0 format. This script is delivered in the "scripts" folder.** 
 The new sim file format is divided into a header and several data chunks which are explained in the following paragraphs.
 
-##  2.2 Sim files 
+##  Sim files 
 The structure of sim files is as follows:
 
 **HEADER**
@@ -329,13 +368,13 @@ This image demonstrates the conventions for coordinates in Lambda:
 
 Coordinates are always in format (Y,X), so in this example, b is at (2,4). a represents (1,1), c is at (YSIZE,XSIZE), d is (1,XSIZE) and e is at position (YSIZE,1).
 
-#  3. USING LAMBDA 
+#  USING THE LAMBDA BINARY
 
-##  3.1 Command line options 
+##  Command line options 
 
 Lambda offers some useful command line options to enable users to automize the simulation routines. With these options it is possible to configure and run Lambda from an external script so that no clicking or manual interference is necessary.
 
-### 3.1.1 Linux and OSX
+### Linux and OSX
 
 ```
 -file <filename>   Loads the specified file upon startup 
@@ -398,7 +437,7 @@ All arguments can be combined together, calling order is irrelevant.
 
 	$ ./lambda -file example.sim -quality 50 -iterations 1000 -avi   
 	
-### 3.1.2 Windows
+### Windows
 
 TODO
 
