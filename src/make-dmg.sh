@@ -1,2 +1,4 @@
-hdiutil create -volname lambda -srcfolder lambda.app -ov -format UDZO lambda.dmg
-mv lambda.dmg ../dist
+#!/bin/bash
+hdiutil create -volname Lambda -srcfolder Lambda.app -ov -format UDZO Lambda.dmg
+rm -fr ../dist/Lambda.dmg
+mv Lambda.dmg ../dist

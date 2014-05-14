@@ -1,13 +1,17 @@
-LAMBDA
-======
 
-[Binaries]: Prebuilt packages are provided for OSX >= 10.8  
+# LAMBDA: INSTALLATION
 
-Building from source
-====================
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/pics/icon2/lambdaicon128.png)
 
-Linux
------
+
+
+## Download
+
+[BINARIES]
+
+## Building from source
+
+### Linux
 
 * prerequisites
 	- 'libqt4-core'
@@ -26,10 +30,9 @@ Linux
 	- you should now find the executable 'lambda' in the 'src' directory
 	- extract the 'examples', 'scripts' and 'doc' directories from this archive to your file system for your convenience
 
-OSX
----
+### OSX
 
-### Using Homebrew
+#### Using Homebrew
 
 * prerequisites
 	- xcode
@@ -47,8 +50,10 @@ $ cd dependencies
 $ make & make install
 $ cd ..
 $ cd src
-$ qmake
+$ qmake Lambda.pro
 $ make
 ```
 
-You will see a lambda.app in the same folder. You can move that to /Applications 
+You will see a Lambda.app in the same folder. You can move that to /Applications 
+
+[BINARIES]: https://github.com/gesellkammer/lambda/tree/master/dist

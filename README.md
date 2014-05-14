@@ -1,5 +1,5 @@
 
-![](https://raw.githubusercontent.com/gesellkammer/lambda/master/pics/icon128.png)
+![](https://raw.githubusercontent.com/gesellkammer/lambda/master/pics/icon2/lambdaicon128.png)
 
 # LAMBDA
 
@@ -20,15 +20,15 @@
 	- simulation recorder
 	- AVI encoder
 	- screenshots
+
 * input
 	- binary user-generates sim files
 	- recorded simulations
+
 * demos
 	- example simulations
 	- scripts for creating sim files and reading receiver output
-* documentation
-	- manual
-	- flow charts
+
 * scripting
 	- lambda simulations can be written in python using shapely to define shapes
 
