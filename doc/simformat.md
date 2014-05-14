@@ -202,11 +202,13 @@ There are two more scripts, "readrce.sce" and "readrce.m", that read receiver ou
 
 If you want to use the more advanced techniques like digital filters etc., see the according example scripts.
 
-## 2.4 Geometry and coordinates conventions
+## Geometry and coordinates conventions
 
 This image demonstrates the conventions for coordinates in Lambda:
 
 ![](https://raw.githubusercontent.com/gesellkammer/lambda/master/doc/coords.gif)
 
 Coordinates are always in format (Y,X), so in this example, b is at (2,4). a represents (1,1), c is at (YSIZE,XSIZE), d is (1,XSIZE) and e is at position (YSIZE,1).
+
+[Back to Manual](https://github.com/gesellkammer/lambda/blob/master/doc/lambda-manual.md)
 
