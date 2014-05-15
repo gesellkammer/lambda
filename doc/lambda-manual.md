@@ -147,14 +147,22 @@ Once you have a simulation loaded, click the `Vis` checkbox to open the visualiz
 
 ## Defining a simulation
 
-There are two ways to create a simulation:
+A Simulation consists of:
+
+* a 2D space with a specific air propagation speed `C` and density `rho`
+* one or more sources (ideal sources, noise or sampled sources)
+* 0 or more walls
+
+You define a simulation via a script
 
 * **Octave / Matlab**: 	Look at the files in the `scripts/matlab` or at [github](https://github.com/gesellkammer/lambda/tree/master/scripts/matlab)
 * **Scilab**: Look at `scipts/scilab` or at [github](https://github.com/gesellkammer/lambda/tree/master/scripts/scilab)
 
 ### Python
 
-There is a package to interact with Lambda, installable via pip:
+There is a package to interact with Lambda. This is the preferred way to create a simulation, since it allows to define complex wall configurations, embed sampled sources, define filters and calculate the wall angles automatically.
+
+To install it: 
 
 	$ pip install lambdasim
 
@@ -165,12 +173,12 @@ Or, even better, clone it from git
 	$ pip install -r requirements.txt
 	$ python setup.py install
 	
-Read the [Documentation](https://github.com/gesellkammer/lambdasim/tree/master/docs)
+Read the [Documentation](https://github.com/gesellkammer/lambdasim/tree/master/docs) for more information.
 
 --- 
 # Simulation Format
 
-[Simulation Format](https://github.com/gesellkammer/lambda/tree/master/doc/simformat.md)
+This is a detailed specification of the [Simulation Format](https://github.com/gesellkammer/lambda/tree/master/doc/simformat.md) used for the `.sim` files.
 
 ---
 

@@ -1199,7 +1199,8 @@ void lambda::vis()
 			// If so, initialize frame and screen. If not, the old variables will be used
 			graphics.frame=new CImg<float>(config.nX,config.nY);
 			graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Lambda visualization",0,2,0,0);
-			drawLambda();
+			//graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Visualization",2,0,0);
+			//drawLambda();
 		}
 		// Now that frames are being calculated, enable screenshot button
 		// if status simulation is running or paused (in other cases, no frame has been
