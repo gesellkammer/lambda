@@ -152,7 +152,7 @@ void lambda::initGui(const char *name)
 	gui.showboundsBox = new QCheckBox("&Walls",gui.outputBox);
 	gui.showboundsBox->setEnabled(false);
 	// Initialize control buttons, these are also unavailable (except for quit button)
-	gui.startButton = new QPushButton("Si&mulate/Pause",gui.controlBox);
+	gui.startButton = new QPushButton("St&art/Pause",gui.controlBox);
 	gui.startButton->setFixedWidth(GUI_BUTTONWIDTH);
 	gui.startButton->setEnabled(false);
 	gui.startButton->setCheckable(true);	// This is a toggle button
@@ -1198,8 +1198,11 @@ void lambda::vis()
 		{
 			// If so, initialize frame and screen. If not, the old variables will be used
 			graphics.frame=new CImg<float>(config.nX,config.nY);
-			graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Lambda visualization",0,2,0,0);
-			//graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Visualization",2,0,0);
+			//graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Lambda visualization",0,2,0,0);
+
+			// x, y, title, normalization, is_fullscreen, is_closed
+			// normalization: 0=none, 1=always, 2=once
+			graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Visualization",0,0,0);
 			//drawLambda();
 		}
 		// Now that frames are being calculated, enable screenshot button
@@ -1447,7 +1450,7 @@ void lambda::showbounds()
 void lambda::checkScreen()
 {
 	// uncheck visbox if vis screen is closed
-	if (graphics.screen->closed) gui.visBox->setChecked(false);
+	if (graphics.screen->is_closed()) gui.visBox->setChecked(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1477,11 +1480,14 @@ void lambda::processVis()
 	if (graphics.screen!=NULL)
 	{
 		// If vis screen is really on, set frame data to the new pressure data
-		*graphics.frame=index.presPres;
+		
+		//*graphics.frame=index.presPres;
+		*graphics.frame->assign(index.presPres, config.nX, config.nY);
+
 		// Scale data for contrast 
 		*graphics.frame*=(float)graphics.contrast;
 		*graphics.frame+=128;
-		framedata = graphics.frame->data;
+		framedata = graphics.frame->data();
 		// Prevent clipping
 		for (int n=0;n<config.nNodes;n++)
 
@@ -1508,7 +1514,14 @@ void lambda::processVis()
 		// Zoom support
 		// graphics.frame->resize(graphics.dispSizeX,graphics.dispSizeY,-100,-100,1);
 		// Write sample number and passed time into picture
-		graphics.frame->draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
+		
+		//graphics.frame->draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
+		char buf[40];
+		sprintf(buf, "#%i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
+		graphics.frame->draw_text(2, 0, buf, graphics.colors.white, graphics.colors.grey);
+
+		
+
 		// Write authors into picture
 		// graphics.frame->draw_text(graphics.dispSizeX-242,graphics.dispSizeY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 		// show frame on screen	
@@ -1516,7 +1529,7 @@ void lambda::processVis()
 		// resize frame back to unzoomed size
 		// graphics.frame->resize(config.nX,config.nY,-100,-100,0);
 		// Check if screen is still open, stop vis otherwise.
-		if (graphics.screen->closed) gui.visBox->click();
+		if (graphics.screen->is_closed()) gui.visBox->click();
 	}
 }
 
@@ -1607,17 +1620,28 @@ void lambda::processAvi()
 	int pow16_2 = (int)pow(16.f, (int)2);
 	CImg<float> frame(config.nX,config.nY);		// Create new frame
 	// Fill frame with current pressure data
-	frame = index.presFutu;
+	
+	// frame = index.presFutu;
+	frame.assign(index.presFutu, config.nX, config.nY);
+
+
 	// Scale frame to match contrast setting
 	frame*=(float)graphics.contrast;
 	frame+=128;
 	// Write frame info and authoring into frame
-	frame.draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
+	// frame.draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
+	char buf[40];
+	sprintf(buf, "#%i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
+	graphics.frame->draw_text(2, 0, buf, graphics.colors.white, graphics.colors.grey);
+
+	float *framedata = frame.data();
+
 	// frame.draw_text(config.nX-242,config.nY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 	// Check each pixel for clipping
 	if (boundsbox_checked) {
 		for (int k=0; k<config.nNodes; k++){
-			pixValue = (int)*(frame.data+k);
+			//pixValue = (int)*(frame.data+k);
+			pixValue = (int)*(framedata+k);
 			if (pixValue<0) 
 				pixValue = 0;
 			else if (pixValue>255) 
@@ -1632,7 +1656,8 @@ void lambda::processAvi()
 	} 
 	else {
 		for (int k=0; k<config.nNodes; k++){
-				pixValue = (int)*(frame.data+k);
+				//pixValue = (int)*(frame.data+k);
+				pixValue = (int)*(framedata+k);
 				if (pixValue<0) 
 					pixValue = 0;
 				else if (pixValue>255) 
@@ -3044,23 +3069,33 @@ simError lambda::initSimulation()
 void lambda::processRep()
 {
 	// Skip this frame if demanded
+	float *data;
 	if (config.n%graphics.skip==0)
 	{
 		// Set the frame to the right position in the recorded data array
-		*graphics.frame=data.record+config.n*config.nNodes;
+		//*graphics.frame=data.record+config.n*config.nNodes;
+
 		// Scale frame for contrast
 		*graphics.frame*=(float)graphics.contrast;
 		*graphics.frame+=128;
 		// Prevent clipping
+		data = graphics.frame->data();
 		for (int n=0; n<config.nNodes; n++)
 		{
-			if (graphics.frame->data[n]>255) graphics.frame->data[n]=255;
-			else if (graphics.frame->data[n]<0) graphics.frame->data[n]=0;
+			//if (graphics.frame->data[n]>255) graphics.frame->data[n]=255;
+			//else if (graphics.frame->data[n]<0) graphics.frame->data[n]=0;
+			if( data[n] > 255) data[n] = 255;
+			else if (data[n] < 0) data[n] = 0;
+			
 		}
 		// Resize to meet zoom setting
 		// graphics.frame->resize(graphics.dispSizeX,graphics.dispSizeY,-100,-100,1);
 		// Write frame data and authoring notes into frame
-		graphics.frame->draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
+		
+		
+		// graphics.frame->draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
+		
+
 		//graphics.frame->draw_text(config.nX-242,config.nY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 		// Display frame on screen
 		graphics.screen->display(*graphics.frame);
@@ -3070,7 +3105,8 @@ void lambda::processRep()
 	// Count number of processed frames up
 	config.n++;
 	// Stop replay if vis window is closed
-	if (graphics.screen->closed) gui.stopButton->click();
+	//if (graphics.screen->closed) gui.stopButton->click();
+	if (graphics.screen->is_closed()) gui.stopButton->click();
 	// And also stop if end of record (or desired nr. of frames) is reached
 	if (config.n >= config.nN) gui.stopButton->click();
 }
@@ -3636,10 +3672,13 @@ void lambda::drawLambda()
 		m+=2;
 	}
 	// graphics.frame->draw_text(config.nX-242,config.nY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
+	float *pixbuf;
 	if (gui.showboundsBox->isChecked())
 	{
+		pixbuf = graphics.frame->data();
 		for (int n=0;n<config.nNodes;n++)
-			if (abs(data.envi[n])!=0.f) graphics.frame->data[n]=255;
+			//if (abs(data.envi[n])!=0.f) graphics.frame->data[n]=255;
+			if (abs(data.envi[n])!=0.f) pixbuf[n] = 255;
 	}
 	graphics.screen->display(*graphics.frame);
 }
