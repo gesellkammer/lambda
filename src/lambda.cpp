@@ -69,6 +69,7 @@ simSample** new_simSample_array(int n) {
 }
 
 #define DEBUG_ENCODING
+#define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::lambda()
@@ -1212,6 +1213,7 @@ void lambda::vis()
 		if ((status==RUNNING)||(status==PAUSED)) processVis();
 		// Set the timer interval to match the desired visualization framerate
 		timer->setInterval((int)(1000/GFX_FRAMERATE));
+		cout << "visualization interval: " << (int)(1000/GFX_FRAMERATE) << "\n";
 		// Launch visualization timer
 		if (status!=RUNNING) visTimer->start();
 	}
@@ -1389,7 +1391,7 @@ void lambda::avi()
 		files.videoFrame.pixelFormat = REVEL_PF_RGBA;
 		files.videoFrame.pixels = new int[config.nNodes];
 	}
-	else{
+	else {
 		// If encoder got switched OFF, finish encoding process, destroy encoder, delete frame
 		int videoSize;
 		Revel_EncodeEnd(files.videoStream, &videoSize);
@@ -1482,25 +1484,23 @@ void lambda::processVis()
 		// If vis screen is really on, set frame data to the new pressure data
 		
 		//*graphics.frame=index.presPres;
-		*graphics.frame->assign(index.presPres, config.nX, config.nY);
+		
+		// *graphics.frame->assign(index.presPres, config.nX, config.nY);
+		framedata = graphics.frame->data();
+		float v;
+		float contrast = (float)graphics.contrast;
+		for (int pos=0;pos<config.nNodes;pos++) {
+			v = index.presPres[pos] * contrast + 128;
+			if (v > 255) v = 255;
+			else if (v < 0) v = 0;
+			framedata[pos] = v;
+		};
 
 		// Scale data for contrast 
-		*graphics.frame*=(float)graphics.contrast;
-		*graphics.frame+=128;
-		framedata = graphics.frame->data();
-		// Prevent clipping
-		for (int n=0;n<config.nNodes;n++)
-
-		/*
-		{
-			if (graphics.frame->data[n]>255) graphics.frame->data[n]=255;
-			else if (graphics.frame->data[n]<0) graphics.frame->data[n]=0;
-		}
-		*/
-		{
-			if (framedata[n]>255) framedata[n]=255;
-			else if (framedata[n]<0) framedata[n]=0;
-		}
+		//*graphics.frame*=(float)graphics.contrast;
+		//*graphics.frame+=128;
+		//framedata = graphics.frame->data();
+		
 		// draw walls and receivers, if walls-checkbox is checked
 		if (gui.showboundsBox->isChecked())
 		{
@@ -1515,12 +1515,10 @@ void lambda::processVis()
 		// graphics.frame->resize(graphics.dispSizeX,graphics.dispSizeY,-100,-100,1);
 		// Write sample number and passed time into picture
 		
-		//graphics.frame->draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
 		char buf[40];
-		sprintf(buf, "#%i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
-		graphics.frame->draw_text(2, 0, buf, graphics.colors.white, graphics.colors.grey);
+		sprintf(buf, "%05i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
+		graphics.frame->draw_text(0, 0, buf, graphics.colors.white, graphics.colors.grey);
 
-		
 
 		// Write authors into picture
 		// graphics.frame->draw_text(graphics.dispSizeX-242,graphics.dispSizeY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
@@ -1620,53 +1618,45 @@ void lambda::processAvi()
 	int pow16_2 = (int)pow(16.f, (int)2);
 	CImg<float> frame(config.nX,config.nY);		// Create new frame
 	// Fill frame with current pressure data
+
 	
 	// frame = index.presFutu;
-	frame.assign(index.presFutu, config.nX, config.nY);
+	//frame.assign(index.presFutu, config.nX, config.nY);
+	float *framedata = frame.data();
+	float v;
+	float contrast = (float)graphics.contrast;
+	for (int pos=0;pos<config.nNodes;pos++) {
+		v = index.presFutu[pos] * contrast + 128;
+		if (v > 255) v = 255.f;
+		else if (v < 0) v = 0.f;
+		framedata[pos] = v;
+	};
+	if( boundsbox_checked ) {
+		for (int pos=0;pos<config.nNodes;pos++) {
+			if (abs(data.envi[pos])!=0.f) {		
+				framedata[pos] = 255.f;
+			}
+		}
+	};
 
-
-	// Scale frame to match contrast setting
-	frame*=(float)graphics.contrast;
-	frame+=128;
-	// Write frame info and authoring into frame
-	// frame.draw_text(2,0,graphics.colors.white,graphics.colors.grey,0.5,"#%i: %-#.2f ms",config.n+1,config.n*config.tSample*1E3);
+	// Write frame info 
 	char buf[40];
 	sprintf(buf, "#%i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
-	graphics.frame->draw_text(2, 0, buf, graphics.colors.white, graphics.colors.grey);
-
-	float *framedata = frame.data();
+	frame.draw_text(2, 0, buf, graphics.colors.white, graphics.colors.grey);
 
 	// frame.draw_text(config.nX-242,config.nY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 	// Check each pixel for clipping
-	if (boundsbox_checked) {
-		for (int k=0; k<config.nNodes; k++){
-			//pixValue = (int)*(frame.data+k);
-			pixValue = (int)*(framedata+k);
-			if (pixValue<0) 
-				pixValue = 0;
-			else if (pixValue>255) 
-				pixValue = 255;
-			// draw walls and receivers
-			if (abs(data.envi[k])!=0.f) 
-				pixValue=255;
-			// Copy clipping-free pixel info into videoframe (convert to hex!)
-			// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
-			*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
-		}
-	} 
-	else {
-		for (int k=0; k<config.nNodes; k++){
-				//pixValue = (int)*(frame.data+k);
-				pixValue = (int)*(framedata+k);
-				if (pixValue<0) 
-					pixValue = 0;
-				else if (pixValue>255) 
-					pixValue = 255;
-				// Copy clipping-free pixel info into videoframe (convert to hex!)
-				// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
-				*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
-			}	
+
+	for (int k=0; k<config.nNodes; k++){
+		pixValue = (int)*(framedata+k);
+		pixValue = CLAMP(pixValue, 0, 255);
+		// Copy clipping-free pixel info into videoframe (convert to hex!)
+		// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
+		
+		*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
+		//*((int *)files.videoFrame.pixels+k) = 0;
 	}
+
 	// Encode this frame and add it to the video file
 	Revel_Error error = Revel_EncodeFrame(files.videoStream, &files.videoFrame, &videoFrameSize);
 	if( error != 0 ) {
@@ -3560,14 +3550,19 @@ void lambda::processSim()
 		// Process actions like rce, rco, avi or vis if required
 		if (gui.rceBox->isChecked()) processRce();
 		if (gui.rcoBox->isChecked()) if (config.n%graphics.skip==0) processRco();
-		if (gui.aviBox->isChecked()) if (config.n%graphics.skip==0) processAvi();
 		if (gui.visBox->isChecked()) if (config.n%graphics.skip==0)	processVis();
+		if (gui.aviBox->isChecked()) if (config.n%graphics.skip==0) processAvi();
 		// update the progress indicator every 20th iteration
 		if ((config.n%100==0)&&(config.nN!=0))
 		{
+			char buf[50];
+			sprintf(buf, "<font color=red>step: %d", config.n);
+			gui.statusLine->setText(buf);
+			/*
 			int progress=(int)((float)config.n*10.f/(float)config.nN);
 			switch(progress)
 			{
+				
 				case 0:
 					gui.statusLine->setText("<font color=red>Simulating... 0%");
 					break;
@@ -3597,7 +3592,9 @@ void lambda::processSim()
 					break;
 				case 9:
 					gui.statusLine->setText("<font color=red>Simulating... 90%");
+				
 			}
+			*/
 		}
 		// update counter. Stop simulation if desired nr. of iterations is reached.
 		config.n++;
