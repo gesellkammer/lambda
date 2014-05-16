@@ -460,6 +460,7 @@ void lambda::resetAll()
 	config.rho=0;
 	config.tSample=0;
 	config.fSample=0;
+	config.t0 = 0;
 	
 	// delete simulation environment data pointers
 	if (data.envi!=NULL) {delete[] data.envi; data.envi = NULL;}
@@ -1210,6 +1211,7 @@ void lambda::vis()
 
 			// x, y, title, normalization, is_fullscreen, is_closed
 			// normalization: 0=none, 1=always, 2=once
+			printf("opening visualization\n");
 			graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Visualization",0,0,0);
 			//drawLambda();
 		}
@@ -3237,7 +3239,7 @@ void lambda::processSim()
 		// this allows pressure sources to share the same node	
 		for (int src=0;src<config.nSrc;src++)
 		{
-			int srcpos=src*6;
+			register int srcpos=src*6;
 			int srcxy=(int)data.srcs[srcpos]+(int)data.srcs[srcpos+1];  // get actual source pos.
 			int type=(int)data.srcs[srcpos+2];  // get actual source type
 			float amp=data.srcs[srcpos+3];      // get actual source amplitude
@@ -3253,7 +3255,8 @@ void lambda::processSim()
 			float hann;
 			float magnitude=0.f;
 			float twopi_freq = twopi*freq;
-			float onepi_phi_180 = onepi*phi/180.f;
+			//float onepi_phi_180 = onepi*phi/180.f;
+			float onepi_phi_180 = phi*0.034906585f;
 			float b0, b1, b2, white;
 			int samplepos, mempos;
 			simSample *sample;
@@ -3615,12 +3618,19 @@ void lambda::processSim()
 		if (gui.visBox->isChecked()) if (config.n%graphics.skip==0)	processVis();
 		if (gui.aviBox->isChecked()) if (config.n%graphics.skip==0) processAvi();
 		// update the progress indicator every 20th iteration
-		if ((config.n%100==0)&&(config.nN!=0))
-		{
-			char buf[50];
-			sprintf(buf, "<font color=red>step: %d", config.n);
+		time_t t1;
+		static time_t t0;
+		static size_t lastn;
+		char buf[50];
+		time(&t1);
+		double dif = difftime(t1, t0);
+		if( dif > 0.25) {
+			t0 = t1;
+			sprintf(buf, "<font color=red>step %d %lu/sec", config.n, (config.n - lastn));
+			lastn = config.n;
 			gui.statusLine->setText(buf);
 		}
+
 		// update counter. Stop simulation if desired nr. of iterations is reached.
 		config.n++;
 		if ((config.n >= config.nN) && (config.nN!=0))

@@ -44,6 +44,7 @@
 #include "revel.h"
 #include "CImg.h"
 #include <time.h>
+#include <ctime>
 
 #if  cimg_OS==1
 #define MAKEDIR mkdir((char*)dirFile.c_str(),0777);
@@ -85,6 +86,7 @@ struct simConfig{
 	float tSample;	// tsample=1/fsample, sampling period
 	float fSample;	// sampling frequency in Hz
 	int nSamples;  // number of embedded samples for sources
+	double t0;     // last time, used to check render speed
 };
 
 // Sample Data
