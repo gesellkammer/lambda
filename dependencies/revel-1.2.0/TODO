@@ -1,0 +1,6 @@
+Bugs
+ - None that I'm aware of!
+
+Possible improvements:
+ - Would it be worth providing a shortcut mode for reading the OpenGL framebuffer directly?
+ - Provide a way to change the dimensions of an encoder's frames in between recordings?
