@@ -1,4 +1,4 @@
-/** \mainpage Revel (The Really Easy Video Encoding Library
+/** \mainpage Revel (The Really Easy Video Encoding Library)
  * The Revel library provides the shortest path between your application and
  * high-quality video output.
  *
@@ -6,16 +6,17 @@
  * - Ensure binary compatibility by testing REVEL_API_VERSION against
  *   Revel_GetApiVersion().
  * - Create an encoder with Revel_CreateEncoder().
- * - Declare a Revel_Params object. initialize it to safe defaults with
+ * - Declare a Revel_Params object. Initialize it to safe defaults with
  *   Revel_InitializeParams(), and then fill in the fields to fit your
- *   application's needs. Pass the object to Revel_EncodeStart() to begin
- *   the encoding process.
+ *   application's needs.
+ *   Call Revel_EncodeStart() to begin the encoding process, passing in
+ *   the Revel_Params object you created in the previous step.
  * - Use Revel_EncodeFrame() to pass in individual video frames in
  *   the order you'd like them to appear.  Optionally, you can
  *   use Revel_EncodeAudio() to provide an audio track for your movie.
  * - Stop the encoding process with Revel_EncodeEnd().  This finalizes
  *   the output movie and makes it viewable.  Don't skip this step!
- * - Destory the encode object with Revel_DestoryEncoder().
+ * - Destroy the encode object with Revel_DestroyEncoder().
  */
 
 /** \example reveltest.cpp
@@ -25,7 +26,7 @@
  */
 
 /*
-Copyright (C) (2004) (Cort Stratton) <cort at cortstratton dot org>
+Copyright (C) 2004-2009 (Cort Stratton) <cort at cortstratton dot org>
 
 This program is free software; you can redistribute it and/or 
 modify it under the terms of the GNU General Public License 
@@ -51,8 +52,8 @@ extern "C" {
 #endif
 
 /* Version information. */
-#define REVEL_VERSION 0x010100 /**< Updated for every release. */
-#define REVEL_API_VERSION 2 /**< Updated only when the public API changes. */
+#define REVEL_VERSION 0x010200 /**< Updated for every release. */
+#define REVEL_API_VERSION 3 /**< Updated only when the public API changes. */
 
 /**
  * Retrieves the run-time value of REVEL_VERSION.
@@ -98,12 +99,23 @@ typedef enum
 } Revel_VideoCodec;
 
 /**
+ * Used to indicate whether pixel 0 of each frame is in the upper-left or lower-right
+ * of the image.
+ */
+typedef enum
+{
+	REVEL_ORIGIN_UPPER_LEFT = 0,  /**< Many libraries set the image origin to the upper left */
+	REVEL_ORIGIN_LOWER_LEFT       /**< OpenGL textures and framebuffers have the origin in the lower left */
+} Revel_FrameOrigin;
+
+
+/**
  * Partial list of supported audio sample formats.
  * This enum only contains the most common sample formats.
  * In actuality, any of the Microsoft WAVE_FORMAT_XXX values is 
  * legal.  Please refer to the Windows mmreg.h file (available
  * on the web at:
- * http://graphics.cs.uni-sb.de/NMM/dist-0.6.0/Docs/Doxygen/html/mmreg_8h.html)
+ * http://doc.ddart.net/msdn/header/include/mmreg.h.html)
  * for a full list of supported sample formats and their associated
  * numerical values.
  */
@@ -130,7 +142,7 @@ typedef enum
     REVEL_ERR_MEMORY,           /**< A memory-related error. */
     REVEL_ERR_BUSY,             /**< Revel is busy with another operation. */
 
-    REVEL_ERR_COUNT             /**< Number of error types (this is nOT a legal error code!) */
+    REVEL_ERR_COUNT             /**< Number of error types (this is NOT a legal error code!) */
 } Revel_Error;
 
 /**
@@ -142,7 +154,7 @@ typedef struct
     float frameRate; /**< frames per second. */
     float quality; /**< ranges 0 to 1 */
     Revel_VideoCodec codec; /**< This codec will be used to compress the video frames. */
-    
+    Revel_FrameOrigin origin; /**< Which corner of the image is pixel 0? */
     /**
      * If 1, the output movie will include an audio stream.
      * Any other value means the movie will be silent.
@@ -171,20 +183,12 @@ typedef struct
 
 
 /**
- * Create an encoder for your movie.  Call me first!
- * @param encoderHandle A handle to the new encoder will be stored here.
- * @return REVEL_ERR_NONE if success, an error code if not.
- */
-Revel_Error Revel_CreateEncoder(int *encoderHandle);
-
-
-/**
  * Initialize a Revel_Params structure to safe default values.
  *
  * It is very important that you call this function on your
  * Revel_Params structure before filling it out yourself!  Otherwise,
  * if you upgrade to a new version of Revel in which new fields
- * were added to Revel_Param, they would be left uninitialized in
+ * were added to Revel_Params, they would be left uninitialized in
  * your application, and Terrible Things could happen.
  *
  * You should not rely on any of the specific default values used in this
@@ -192,19 +196,36 @@ Revel_Error Revel_CreateEncoder(int *encoderHandle);
  * to be correct for your application.
  *
  * @param params This structure will be filled with safe default values.
+ * @return REVEL_ERR_NONE if success, an error code if not.
  */
-void Revel_InitializeParams(Revel_Params *params);
+Revel_Error Revel_InitializeParams(Revel_Params *params);
+
+/**
+ * Create an encoder for your movie.  Call me first!
+ * @param encoderHandle A handle to the new encoder will be stored here.
+ * @param params Fill this structure with your movie settings before calling.
+ * @return REVEL_ERR_NONE if success, an error code if not.
+ */
+Revel_Error Revel_CreateEncoder(int *encoderHandle, const Revel_Params *params);
+
+/**
+ * Tests an encoder handle for validity.
+ *
+ * @param encoderHandle The encoder handle to test for validity.
+ * @return true if encoderHandle refers to a valid encoder, created by Revel_CreateEncoder().
+ *         Otherwise, returns false. 
+ */
+bool Revel_IsEncoderValid(int encoderHandle);
+
 
 /**
  * Start encoding a new movie.
  *
  * @param encoderHandle Must be a valid encoder handle.
  * @param filename The output movie will be written to this file.
- * @param params Fill this structure with your movie settings before calling.
  * @return REVEL_ERR_NONE if success, an error code if not.
  */
-Revel_Error Revel_EncodeStart(int encoderHandle, const char* filename,
-                              Revel_Params *params);
+Revel_Error Revel_EncodeStart(int encoderHandle, const char* filename);
 
 
 /**
@@ -225,7 +246,7 @@ Revel_Error Revel_EncodeFrame(int encoderHandle,
  * Encode a chunk of audio data to the movie.
  *
  * This function will have no effect if the hasAudio field of Revel_Params
- * passed to Revel_EncodeStart() was 0.
+ * passed to Revel_EncodeStart() was anything other than 1.
  * Each new audio chunk will be appended to the end of the existing audio
  * data.  See the Revel FAQ (http://www.dangerware.org/cgi-bin/revelfaq.py)
  * for important ramifications of this behavior!

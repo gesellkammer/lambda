@@ -821,6 +821,12 @@ void lambda::handleParameters(int argc, char *argv[])
 		{
 			clickAvi=true; // check avi checkbox
 		}
+		else if ((argument=="-avifps")||(argument=="/avifps"))
+		{
+			if (arg<argc-1) {
+				AVI_FRAMERATE = atoi(argv[arg+1]);
+			}
+		}
 		else if ((argument=="-rce")||(argument=="-Rce")||(argument=="-RCE")||
 				 (argument=="/rce")||(argument=="/Rce")||(argument=="/RCE"))
 		{
@@ -855,6 +861,7 @@ void lambda::handleParameters(int argc, char *argv[])
 			        "-rce            : activate recording at receivers, if defined\n"
 			        "-walls          : show walls, if defined\n"
 			        "-avi            : record the simulation as an avi\n"
+			        "-avifps N       : set the framerate of the generate avi (default=25)\n"
 			        "-quality N  (0-100)  : adjust the quality of the avi rendering (default 100)\n"
 			        "-contrast N (0-100)  : adjust the contrast of the visualization (default 50)\n"
 			        "-rco            : activate the recording of the visualization (as a .rco file)\n"
@@ -1355,7 +1362,48 @@ void lambda::avi()
 		files.lastFileName = (char *)files.lastFileName.c_str();
 		files.lastFileName += ".avi";
 
+		// Make sure the API version of Revel we're compiling against matches the
+    	// header files!  This is terribly important!
+	    if (REVEL_API_VERSION != Revel_GetApiVersion())
+	    {
+	        printf("ERROR: Revel version mismatch!\n");
+	        printf("Headers: version %06x, API version %d\n", REVEL_VERSION,
+	            REVEL_API_VERSION);
+	        printf("Library: version %06x, API version %d\n", Revel_GetVersion(),
+	            Revel_GetApiVersion());
+	        // TODO: return error codes
+	        return;
+	    }
+
+		Revel_Params videoParams;
+		Revel_InitializeParams(&videoParams);
+		
+		// Video Frames can't have uneven dimensions, 
+		// we discard one "pixel" if necessary.
+		videoParams.width = config.nX >> 2 << 2;
+		videoParams.height = config.nY >> 2 << 2;
+		videoParams.frameRate = (float)AVI_FRAMERATE;
+		videoParams.quality = graphics.quality/100;
+		videoParams.codec = REVEL_CD_XVID;
+		videoParams.hasAudio = 0;
+
 		// Initialize and setup Revel encoder (see revel documentation for references)
+		int encoderHandle;
+		error = Revel_CreateEncoder(&encoderHandle, &videoParams);
+		if (error != REVEL_ERR_NONE) {
+			printf("Revel Error while creating encoder: %d\n", error);
+			return;
+		}
+
+		// Check that the encoder is valid
+		if( !Revel_IsEncoderValid(encoderHandle)) {
+			printf("Encoder created but not valid!");
+			return;
+		}
+
+		files.videoStream = encoderHandle;
+
+		/*
 		files.videoStream = -2;
 		error = Revel_CreateEncoder(&files.videoStream);
 		if( error != 0) {
@@ -1363,19 +1411,8 @@ void lambda::avi()
 		} else {
 			cout << "created encoder-stream: " << files.videoStream << "\n";
 		}
+		*/
 
-		Revel_Params videoParams;
-		Revel_InitializeParams(&videoParams);
-		videoParams.width = config.nX;
-		videoParams.height = config.nY;
-		videoParams.frameRate = (float)AVI_FRAMERATE;
-		videoParams.quality = graphics.quality/100;
-		videoParams.codec = REVEL_CD_XVID;
-		videoParams.hasAudio = 0;
-		error = Revel_EncodeStart(files.videoStream, (char *)files.lastFileName.c_str(), &videoParams);
-		if( error != 0) {
-			cout << "error starting encoder: " << error << "\n";
-		};
 		if( 1 ) {
 			cout << "lastFileName: " << (char *)files.lastFileName.c_str() << "\n";
 			cout << "width:  " << videoParams.width << "\n";
@@ -1383,18 +1420,31 @@ void lambda::avi()
 			cout << "frameRate:" << videoParams.frameRate << "\n";
 			cout << "quality: " << videoParams.quality << "\n";
 			cout << "codec:  " << videoParams.codec << "\n";
+			cout << "framerate" << videoParams.frameRate << "\n";
 		};
 
-		files.videoFrame.width = config.nX;
-		files.videoFrame.height = config.nY;
+		error = Revel_EncodeStart(files.videoStream, (char *)files.lastFileName.c_str());
+		if( error != REVEL_ERR_NONE ) {
+			printf("Revel Error while starting encoder: %d\n", error);
+			printf("encoder: %d\n", files.videoStream);
+			return;
+		};
+
+		files.videoFrame.width = videoParams.width;
+		files.videoFrame.height = videoParams.height;
 		files.videoFrame.bytesPerPixel = 4;
 		files.videoFrame.pixelFormat = REVEL_PF_RGBA;
-		files.videoFrame.pixels = new int[config.nNodes];
+		files.videoFrame.pixels = new int[videoParams.width*videoParams.height];
+		memset(files.videoFrame.pixels, 0, videoParams.width*videoParams.height*4);
 	}
 	else {
 		// If encoder got switched OFF, finish encoding process, destroy encoder, delete frame
-		int videoSize;
-		Revel_EncodeEnd(files.videoStream, &videoSize);
+		int videoSize = 0;
+		error = Revel_EncodeEnd(files.videoStream, &videoSize);
+		if( error != REVEL_ERR_NONE ) {
+			printf("Revel Error while ending encoding: %d\n", error);
+			return;
+		}
 		Revel_DestroyEncoder(files.videoStream);
 		delete[] (float *)files.videoFrame.pixels;
 	}
@@ -1611,15 +1661,14 @@ void lambda::processRco()
 //
 void lambda::processAvi()
 {
- 	int pixValue;	// Needed in anti-clipping procedure
-	int videoFrameSize;	// Revel stores video frame size here
+ 	int pixValue = 0;	// Needed in anti-clipping procedure
+	int videoFrameSize = 0;	// Revel stores video frame size here
 	int boundsbox_checked = gui.showboundsBox->isChecked();
 	int pow16_4 = (int)pow(16.f, (int)4);
 	int pow16_2 = (int)pow(16.f, (int)2);
 	CImg<float> frame(config.nX,config.nY);		// Create new frame
-	// Fill frame with current pressure data
-
 	
+	// Fill frame with current pressure data
 	// frame = index.presFutu;
 	//frame.assign(index.presFutu, config.nX, config.nY);
 	float *framedata = frame.data();
@@ -1647,27 +1696,40 @@ void lambda::processAvi()
 	// frame.draw_text(config.nX-242,config.nY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 	// Check each pixel for clipping
 
-	for (int k=0; k<config.nNodes; k++){
-		pixValue = (int)*(framedata+k);
-		pixValue = CLAMP(pixValue, 0, 255);
-		// Copy clipping-free pixel info into videoframe (convert to hex!)
-		// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
-		
-		*((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
-		//*((int *)files.videoFrame.pixels+k) = 0;
+	int vidX = files.videoFrame.width;
+	int vidY = files.videoFrame.height;
+	int *videobuf = (int *)files.videoFrame.pixels;
+
+	if( vidX == config.nX && vidY == config.nY) {
+		for (int k=0; k<config.nNodes; k++){
+			pixValue = (int)*(framedata+k);
+			//pixValue = CLAMP(pixValue, 0, 255);
+			// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
+			*((int *)videobuf+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
+		}
+	} else {
+		for (int k=0; k<vidY;k++) {
+			float *framedata_row = framedata + k*config.nX;
+			for (int l=0; l<vidX;l++) {
+				//pixValue = (int)*(framedata + (k_config_nX + l));
+				pixValue = (int)*(framedata_row++);
+				pixValue = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
+				*videobuf = pixValue;
+				videobuf++;
+				//framedata_row++;
+			}
+		}
 	}
 
 	// Encode this frame and add it to the video file
 	Revel_Error error = Revel_EncodeFrame(files.videoStream, &files.videoFrame, &videoFrameSize);
-	if( error != 0 ) {
-		// EDU
-		cout << "Error encoding frame: " << config.n << " --- error number: " << error << "\n" << std::flush;
+	if( error != REVEL_ERR_NONE ) {
+		printf("Revel Error while writing frame: %d  -- error number: %d\n", config.n, error);
+		// cout << "Error encoding frame: " << config.n << " --- error number: " << error << "\n" << std::flush;
 		gui.stopButton->click();
-
-	} else {
-		if(config.n % 100 == 0)
-			cout << "encoding frame: " << config.n << "\r";
-	}
+	} 
+	if(config.n % 100 == 0)
+		printf("Frame %d of %d: %d bytes\n", config.n, config.nN, videoFrameSize);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3558,43 +3620,6 @@ void lambda::processSim()
 			char buf[50];
 			sprintf(buf, "<font color=red>step: %d", config.n);
 			gui.statusLine->setText(buf);
-			/*
-			int progress=(int)((float)config.n*10.f/(float)config.nN);
-			switch(progress)
-			{
-				
-				case 0:
-					gui.statusLine->setText("<font color=red>Simulating... 0%");
-					break;
-				case 1:
-					gui.statusLine->setText("<font color=red>Simulating... 10%");
-					break;
-				case 2:
-					gui.statusLine->setText("<font color=red>Simulating... 20%");
-					break;
-				case 3:
-					gui.statusLine->setText("<font color=red>Simulating... 30%");
-					break;
-				case 4:
-					gui.statusLine->setText("<font color=red>Simulating... 40%");
-					break;
-				case 5:
-					gui.statusLine->setText("<font color=red>Simulating... 50%");
-					break;
-				case 6:
-					gui.statusLine->setText("<font color=red>Simulating... 60%");
-					break;
-				case 7:
-					gui.statusLine->setText("<font color=red>Simulating... 70%");
-					break;
-				case 8:
-					gui.statusLine->setText("<font color=red>Simulating... 80%");
-					break;
-				case 9:
-					gui.statusLine->setText("<font color=red>Simulating... 90%");
-				
-			}
-			*/
 		}
 		// update counter. Stop simulation if desired nr. of iterations is reached.
 		config.n++;
