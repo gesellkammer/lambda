@@ -1,4 +1,4 @@
-# Lambda 2.1
+# Lambda
 
 ![](https://raw.githubusercontent.com/gesellkammer/lambda/master/pics/icon2/lambdaicon128.png)
 
