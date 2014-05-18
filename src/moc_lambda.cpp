@@ -22,7 +22,7 @@ static const uint qt_meta_data_lambda[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      18,   14, // methods
+      19,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -47,7 +47,8 @@ static const uint qt_meta_data_lambda[] = {
      134,   14,   14,   14, 0x08,
      147,   14,   14,   14, 0x08,
      162,   14,   14,   14, 0x08,
-     175,   14,   14,   14, 0x08,
+     176,   14,   14,   14, 0x08,
+     189,   14,   14,   14, 0x08,
 
        0        // eod
 };
@@ -57,7 +58,8 @@ static const char qt_meta_stringdata_lambda[] = {
     "showbounds()\0start()\0stop()\0snap()\0"
     "processSim()\0processRep()\0setContrast()\0"
     "setZoom()\0setSkip()\0setQuality()\0"
-    "setFramerate()\0setSamples()\0checkScreen()\0"
+    "setFramerate()\0setColormap()\0setSamples()\0"
+    "checkScreen()\0"
 };
 
 void lambda::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -82,8 +84,9 @@ void lambda::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 13: _t->setSkip(); break;
         case 14: _t->setQuality(); break;
         case 15: _t->setFramerate(); break;
-        case 16: _t->setSamples(); break;
-        case 17: _t->checkScreen(); break;
+        case 16: _t->setColormap(); break;
+        case 17: _t->setSamples(); break;
+        case 18: _t->checkScreen(); break;
         default: ;
         }
     }
@@ -122,9 +125,9 @@ int lambda::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 18)
+        if (_id < 19)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 18;
+        _id -= 19;
     }
     return _id;
 }

@@ -10,6 +10,8 @@ Features
 
 .. image:: pics/angled-muffler.png
 
+.. image:: pics/hot-muffler.png
+
 * general
     - FDTD simulation of wave propagation in 2-dimensional environments
     - reflective walls with real-valued reflection coefficients

@@ -53,6 +53,7 @@ int GFX_MINFRAMERATE = 10;
 int GFX_MAXFRAMERATE = 500;
 int GFX_STDFRAMERATE = 25;
 int MEMSRC = 20;
+int COLORMAP = 1;
 
 simSample** new_simSample_array(int n) {
 	simSample **out = new simSample*[n];
@@ -66,6 +67,73 @@ simSample** new_simSample_array(int n) {
 		out[i] = sample;
 	}
 	return out;
+}
+
+inline void interpolcol(float dx, int r0, int g0, int b0, int r1, int g1, int b1, int &r, int &g, int &b) {
+	r = r0 + dx * (r1-r0);
+	g = g0 + dx * (g1-g0);
+	b = b0 + dx * (b1-b0);
+}
+
+
+void colormap_heat(float v, int &r, int &g, int &b) {
+	// v should be 0-1
+	switch( int(v*4) ) {
+		case 0:
+			interpolcol(v/0.25, 0, 0, 0, 69, 25, 94, r, g, b);
+			break;
+		case 1:
+			interpolcol((v-0.25)/0.25, 60, 25, 94, 216, 82, 50, r, g, b);
+			break;
+		case 2:
+			interpolcol((v-0.5)/0.25, 216, 82, 50, 253, 162, 28, r, g, b);
+			break;
+		case 3:
+			interpolcol((v-0.75)/0.25, 253, 162, 28, 255, 255, 255, r, g, b);
+			break;
+		default:
+			r = 255; g = 255; b = 255;
+			break;
+	}
+}
+
+void colormap_temp(float v, int &r, int &g, int &b) {
+	switch( int(v*4) ) {
+		case 0:
+			interpolcol(v/0.25, 0, 0, 102, 87, 113, 234, r, g, b);
+			break;
+		case 1:
+			interpolcol((v-0.25)/0.25, 87, 113, 234, 228, 234, 252, r, g, b);
+			break;
+		case 2:
+			interpolcol((v-0.5)/0.25, 228, 234, 252, 253, 251, 130, r, g, b);
+			break;
+		case 3:
+			interpolcol((v-0.75)/0.25, 253, 251, 130, 208, 34, 41, r, g, b);
+			break;
+		default:
+			r = 208; g = 34; b = 41;
+			break;
+	}	
+}
+
+void colormap_grey(float v, int &r, int &g, int &b) {
+	r = v*255; g = v*255, b=v*255;
+}
+
+typedef void (*colormap_t)(float, int&, int&, int&);
+
+colormap_t get_colormap(int colormap_index) {
+	switch(colormap_index) {
+		case 0: 
+			return colormap_grey;
+		case 1:
+			return colormap_heat;
+		case 2:
+			return colormap_temp;
+		default:
+			return colormap_grey;
+	}
 }
 
 #define DEBUG_ENCODING
@@ -223,13 +291,21 @@ void lambda::initGui(const char *name)
 	gui.samplesBox = new QSpinBox(gui.configBox);
 	gui.samplesLabel = new QLabel("&Iterations",gui.configBox);
 	gui.samplesLabel->setBuddy(gui.samplesBox);
-	gui.samplesBox->setRange(GFX_MINSAMPLES,GFX_MAXSAMPLES);
 	gui.samplesBox->setValue(GFX_STDSAMPLES);
 	gui.samplesBox->setFrame(false);
 	gui.samplesBox->setSpecialValueText("infinite");
 	gui.samplesBox->setAlignment(Qt::AlignRight);
 	gui.samplesBox->setFixedWidth(GUI_SPINWIDTH);
 	gui.samplesBox->setRange(0,GFX_MAXSAMPLES);
+	// Colormap
+	gui.colormap = new QSpinBox(gui.configBox);
+	gui.colormapLabel = new QLabel("Colormap", gui.configBox);
+	gui.colormapLabel->setBuddy(gui.colormap);
+	gui.colormap->setRange(0, 2);
+	gui.colormap->setValue(COLORMAP);
+	gui.colormap->setAlignment(Qt::AlignRight);
+	gui.colormap->setFixedWidth(GUI_SPINWIDTH);
+
 	// Initialize status display
 	gui.statusLine = new QLabel(gui.statusBox);
 	gui.statusLine->setText("<font color=red>Bad Data</font>");	// No data is loaded at startup
@@ -282,6 +358,8 @@ void lambda::initGui(const char *name)
 	configLayout->addWidget(gui.samplesLabel,4,1);
 	configLayout->addWidget(gui.framerateBox,5,0);
 	configLayout->addWidget(gui.framerateLabel,5,1);
+	configLayout->addWidget(gui.colormap,6, 0);
+	configLayout->addWidget(gui.colormapLabel,6, 1);
 	configLayout->setMargin(2);
 	configLayout->setSpacing(2);
 	gui.configBox->setLayout(configLayout);
@@ -321,6 +399,7 @@ void lambda::initGui(const char *name)
 	connect(gui.qualityBox,SIGNAL(valueChanged(int)),this,SLOT(setQuality()));
 	connect(gui.samplesBox,SIGNAL(valueChanged(int)),this,SLOT(setSamples()));
 	connect(gui.framerateBox,SIGNAL(valueChanged(int)),this,SLOT(setFramerate()));
+	connect(gui.colormap,SIGNAL(valueChanged(int)),this,SLOT(setColormap()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,8 +438,8 @@ void lambda::initVariables()
 	graphics.dispSizeY=0;
 	graphics.quality=GFX_STDQUALITY;
 	graphics.colors.white[0]=255.f; graphics.colors.grey[0]=127.f; graphics.colors.black[0]=0.f;
-	graphics.colors.white[1]=0.f; graphics.colors.grey[1]=0.f; graphics.colors.black[1]=0.f;
-	graphics.colors.white[2]=0.f; graphics.colors.grey[2]=0.f; graphics.colors.black[2]=0.f;
+	graphics.colors.white[1]=255.f; graphics.colors.grey[1]=127.f; graphics.colors.black[1]=0.f;
+	graphics.colors.white[2]=255.f; graphics.colors.grey[2]=127.f; graphics.colors.black[2]=0.f;
 	graphics.screen=NULL;
 	graphics.frame=NULL;
 	// Initialize simulation environment data pointers
@@ -461,6 +540,7 @@ void lambda::resetAll()
 	config.tSample=0;
 	config.fSample=0;
 	config.t0 = 0;
+	config.colormap = COLORMAP;
 	
 	// delete simulation environment data pointers
 	if (data.envi!=NULL) {delete[] data.envi; data.envi = NULL;}
@@ -817,6 +897,11 @@ void lambda::handleParameters(int argc, char *argv[])
 		{
 			if (arg<argc-1) set("nN",atoi(argv[arg+1])); // set total number of iterations
 		}
+		else if ((argument=="-colormap")||(argument=="-colormap")||(argument=="-colormap")||
+				 (argument=="/colormap")||(argument=="/colormap")||(argument=="/colormap"))
+		{
+			if (arg<argc-1) set("colormap",atoi(argv[arg+1])); 
+		}
 		else if ((argument=="-avi")||(argument=="-Avi")||(argument=="-AVI")||
 				 (argument=="/avi")||(argument=="/Avi")||(argument=="/AVI"))
 		{
@@ -865,6 +950,7 @@ void lambda::handleParameters(int argc, char *argv[])
 			        "-avifps N       : set the framerate of the generate avi (default=25)\n"
 			        "-quality N  (0-100)  : adjust the quality of the avi rendering (default 100)\n"
 			        "-contrast N (0-100)  : adjust the contrast of the visualization (default 50)\n"
+			        "-colormap N (0-2)    : set the color map (0=gray, 1=hot, 2=temp) (def.=0)\n"
 			        "-rco            : activate the recording of the visualization (as a .rco file)\n"
 			        "-zoom           : set the zoom level of a visualization (an integer number)\n"
 			        "-skip           : set number of frames to skip (default 0)\n"
@@ -1175,6 +1261,11 @@ void lambda::setFramerate()
 	set("framerate",gui.framerateBox->value());
 }
 
+void lambda::setColormap()
+{
+	set("colormap", gui.colormap->value());
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::vis()
 //
@@ -1206,7 +1297,9 @@ void lambda::vis()
 		if ((graphics.screen==NULL)&&(graphics.frame==NULL))
 		{
 			// If so, initialize frame and screen. If not, the old variables will be used
-			graphics.frame=new CImg<float>(config.nX,config.nY);
+			// graphics.frame = new CImg<float>(config.nX,config.nY);
+			graphics.frame = new CImg<float>(config.nX,config.nY, 1, 3);
+
 			//graphics.screen=new CImgDisplay(graphics.dispSizeX,graphics.dispSizeY,"Lambda visualization",0,2,0,0);
 
 			// x, y, title, normalization, is_fullscreen, is_closed
@@ -1530,57 +1623,57 @@ void lambda::checkScreen()
 //
 void lambda::processVis()
 {
-	float *framedata;
 	if (graphics.screen!=NULL)
 	{
-		// If vis screen is really on, set frame data to the new pressure data
-		
-		//*graphics.frame=index.presPres;
-		
-		// *graphics.frame->assign(index.presPres, config.nX, config.nY);
-		framedata = graphics.frame->data();
-		float v;
-		float contrast = (float)graphics.contrast;
-		for (int pos=0;pos<config.nNodes;pos++) {
-			v = index.presPres[pos] * contrast + 128;
-			if (v > 255) v = 255;
-			else if (v < 0) v = 0;
-			framedata[pos] = v;
-		};
-
-		// Scale data for contrast 
-		//*graphics.frame*=(float)graphics.contrast;
-		//*graphics.frame+=128;
-		//framedata = graphics.frame->data();
-		
-		// draw walls and receivers, if walls-checkbox is checked
-		if (gui.showboundsBox->isChecked())
-		{
-			for (int n=0;n<config.nNodes;n++) {
-				if (abs(data.envi[n])!=0.f) {
-					framedata[n] = 255; 
-				} else if (data.deadnode[n]) 
-					framedata[n] = 0;
-			}
-		}
-		// Zoom support
-		// graphics.frame->resize(graphics.dispSizeX,graphics.dispSizeY,-100,-100,1);
-		// Write sample number and passed time into picture
-		
-		char buf[40];
-		sprintf(buf, "%05i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
-		graphics.frame->draw_text(0, 0, buf, graphics.colors.white, graphics.colors.grey);
-
+		processFrame(graphics.frame);
 
 		// Write authors into picture
 		// graphics.frame->draw_text(graphics.dispSizeX-242,graphics.dispSizeY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 		// show frame on screen	
 		graphics.screen->display(*graphics.frame);
-		// resize frame back to unzoomed size
-		// graphics.frame->resize(config.nX,config.nY,-100,-100,0);
-		// Check if screen is still open, stop vis otherwise.
 		if (graphics.screen->is_closed()) gui.visBox->click();
 	}
+}
+
+void lambda::processFrame(CImg<float> *frame) {
+	int r, g, b;
+	float v;
+	float contrast = (float)graphics.contrast/255.f;
+	colormap_t cm = get_colormap(config.colormap);
+	int nNodes = config.nNodes;
+	int nNodes2 = config.nNodes*2;
+	float *framedata = frame->data();
+	for (register int n=0;n<config.nNodes;n++) {
+		v = index.presPres[n] * contrast + 0.5;
+		if (v > 1) v = 1;
+		else if (v < 0) v = 0;
+		cm(v, r, g, b);
+		framedata[n] = r;
+		framedata[n+nNodes] = g;
+		framedata[n+nNodes2] = b;
+	};
+
+	// draw walls and receivers, if walls-checkbox is checked
+	if (gui.showboundsBox->isChecked())
+	{
+		for (register int n=0;n<config.nNodes;n++) {
+			if( data.deadnode[n]) {
+				framedata[n] = 0;
+				framedata[n+nNodes] = 0;
+				framedata[n+nNodes2] = 0;
+			} else if (abs(data.envi[n])!=0.f) {
+				framedata[n] = 50;
+				framedata[n+nNodes] = 50;
+				framedata[n+nNodes2] = 0;
+			} 
+		}
+	}
+	
+	char buf[40];
+	sprintf(buf, "%05i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
+	cm(0.5, r, g, b);
+	float bg[3] = {r, g, b};
+	frame->draw_text(0, 0, buf, graphics.colors.black, bg);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1663,63 +1756,28 @@ void lambda::processRco()
 //
 void lambda::processAvi()
 {
- 	int pixValue = 0;	// Needed in anti-clipping procedure
-	int videoFrameSize = 0;	// Revel stores video frame size here
-	int boundsbox_checked = gui.showboundsBox->isChecked();
+ 	int videoFrameSize = 0;	// Revel stores video frame size here
 	int pow16_4 = (int)pow(16.f, (int)4);
 	int pow16_2 = (int)pow(16.f, (int)2);
-	CImg<float> frame(config.nX,config.nY);		// Create new frame
+	CImg<float> frame(config.nX,config.nY, 1, 3);		// Create new frame
+	processFrame(&frame);
 	
-	// Fill frame with current pressure data
-	// frame = index.presFutu;
-	//frame.assign(index.presFutu, config.nX, config.nY);
-	float *framedata = frame.data();
-	float v;
-	float contrast = (float)graphics.contrast;
-	for (int pos=0;pos<config.nNodes;pos++) {
-		v = index.presFutu[pos] * contrast + 128;
-		if (v > 255) v = 255.f;
-		else if (v < 0) v = 0.f;
-		framedata[pos] = v;
-	};
-	if( boundsbox_checked ) {
-		for (int pos=0;pos<config.nNodes;pos++) {
-			if (abs(data.envi[pos])!=0.f) {		
-				framedata[pos] = 255.f;
-			}
-		}
-	};
-
-	// Write frame info 
-	char buf[40];
-	sprintf(buf, "#%i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
-	frame.draw_text(2, 0, buf, graphics.colors.white, graphics.colors.grey);
-
-	// frame.draw_text(config.nX-242,config.nY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
-	// Check each pixel for clipping
-
 	int vidX = files.videoFrame.width;
 	int vidY = files.videoFrame.height;
 	int *videobuf = (int *)files.videoFrame.pixels;
+	int r, g, b;
+	float *framedata = frame.data();
 
-	if( vidX == config.nX && vidY == config.nY) {
-		for (int k=0; k<config.nNodes; k++){
-			pixValue = (int)*(framedata+k);
-			//pixValue = CLAMP(pixValue, 0, 255);
-			// *((int *)files.videoFrame.pixels+k) = 0xFF000000+pixValue+pixValue*(int)pow(16.f,(int)2)+pixValue*(int)pow(16.f,(int)4);
-			*((int *)videobuf+k) = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
-		}
-	} else {
-		for (int k=0; k<vidY;k++) {
-			float *framedata_row = framedata + k*config.nX;
-			for (int l=0; l<vidX;l++) {
-				//pixValue = (int)*(framedata + (k_config_nX + l));
-				pixValue = (int)*(framedata_row++);
-				pixValue = 0xFF000000+pixValue+pixValue*pow16_2+pixValue*pow16_4;
-				*videobuf = pixValue;
-				videobuf++;
-				//framedata_row++;
-			}
+	for (int k=0; k<vidY;k++) {
+		float *framedata_row = framedata + k*config.nX;
+		for (int l=0; l<vidX;l++) {
+			//pixValue = (int)*(framedata + (k_config_nX + l));
+			r = (int)*(framedata_row);
+			g = (int)*(framedata_row+config.nNodes);
+			b = (int)*(framedata_row+config.nNodes*2);
+			*videobuf = 0xFF000000+r+g*pow16_2+b*pow16_4;
+			videobuf++;
+			framedata_row++;
 		}
 	}
 
@@ -1866,6 +1924,13 @@ template<class T> simError lambda::set(const string what,const T value)
 	{
 		GFX_FRAMERATE = (int)value;
 		gui.framerateBox->setValue((int)value);
+		return NONE;
+	}
+	if (what=="colormap")
+	{
+		COLORMAP = (int)value;
+		config.colormap = (int)value;
+		gui.colormap->setValue((int)value);
 		return NONE;
 	}
 	if (what=="nRec")

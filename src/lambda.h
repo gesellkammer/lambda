@@ -87,6 +87,7 @@ struct simConfig{
 	float fSample;	// sampling frequency in Hz
 	int nSamples;  // number of embedded samples for sources
 	double t0;     // last time, used to check render speed
+	int colormap;
 };
 
 // Sample Data
@@ -192,6 +193,8 @@ struct simGui{
 	QLabel *qualityLabel;
 	QSpinBox *samplesBox;
 	QLabel *samplesLabel;
+	QSpinBox *colormap;
+	QLabel *colormapLabel;
 
 	QLabel *statusLine;
 	QLabel *copyright1;
@@ -632,6 +635,8 @@ private slots:
 	
 	void setFramerate();
 
+	void setColormap();
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::setSamples()
 //
@@ -965,6 +970,10 @@ private:
 //              if the "walls"-checkbox is checked
 //
 	virtual void processVis();
+
+	virtual void processFrame(CImg<float> *frame);
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // lambda::processRce()
