@@ -8,9 +8,7 @@ LAMBDA
 Features
 --------
 
-.. image:: pics/angled-muffler.png
-
-.. image:: pics/hot-muffler.png
+.. image:: pics/muffle.gif
 
 * general
     - FDTD simulation of wave propagation in 2-dimensional environments
@@ -47,8 +45,8 @@ Installation
 See INSTALL_ for instructions.
 
 
-Usage
-=====
+Documentation
+=============
 
 Please refer to the manual_ in the docs directory.
 
