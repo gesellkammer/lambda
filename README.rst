@@ -39,16 +39,10 @@ Features
       or in octave/matlab using matrices.
 
 
-Installation
-============
+Installation & Documentation
+============================
 
-See INSTALL_ for instructions.
-
-
-Documentation
-=============
-
-Please refer to the manual_ in the docs directory.
+Please refer to the manual_
 
 ------------------------
 

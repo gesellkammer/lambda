@@ -16,15 +16,11 @@
 
 # INSTALLATION
 
-You can either run the prebuilt binaries from this package or make your own build from the source, especially if the prebuilt executable generates problems on your machine.
+You can either run the prebuilt binaries from this package or make your own build from the source. 
 
 ## Linux
 
-Required packages:
-
-	libc6 version 2.4 or higher
-	
-If you have the Linux package (suffix "glx"), simply extract the contents of "bin" to "/usr/bin/". Extract the directories "examples", "doc" and "scripts" to your file system if you intend to use them. 
+There are no binaries for Linux at the moment. Use the source.
 
 ## Windows
 
@@ -39,7 +35,7 @@ Lambda depends on the Qt4 library being present in your system. Currently the be
 
 	$ brew install qt
 	
-* Download the [Lambda.app](https://github.com/gesellkammer/lambda/raw/master/dist)
+* [Download the latest binary](https://github.com/gesellkammer/lambda/releases)
 
 Copy Lambda.app to your /Applications folder
 
@@ -71,7 +67,7 @@ You should now have the lambda executable in the "src" directory.
 
 Required software:
 
-* Trolltech Qt 4
+* Qt4
 	
 Extract the archive to your file system. Go to the location you extracted it to and cd into the "src" directory. Run
 
@@ -89,19 +85,15 @@ Since compiling the AVI encoder creates a lot of problems on Windows machines, t
 
 Required software:
 
-* Trolltech Qt 4
-* revel (>= 1.1.0), distributed as part of this package.
+* Qt 4
+* xvid
 * X11 (XQuartz)	
-
-### With macports
-	
-	$ port install xvid
 
 ### With homebrew
 
 	$ brew install xvid
 
-Compile and install revel (used for video output). If you installed libxvid via macports, you need to include the path (opt/local/include by default)
+Compile and install revel (used for video output)
 
 	$ cd dependencies
 	$ export CFLAGS="-I/opt/local/include -I/usr/include/malloc"
@@ -109,7 +101,7 @@ Compile and install revel (used for video output). If you installed libxvid via 
 	$ make
 	$ sudo make install
 	
-Modify the following lines in src/Lambda-OSX.pro to match your system. An Example:
+Now go to the `src` directory. If necessary, modify the following lines in src/Lambda-OSX.pro to match your system. An Example:
 
 	INCLUDEPATH += . /opt/X11/include/X11 /usr/include/malloc /opt/local/include
 	LIBS += -L. -lrevel -lxvidcore -lX11 -L/opt/X11/lib -L/opt/local/lib
@@ -122,7 +114,7 @@ This will generate a Makefile. Modify it to match your system if necessary. Then
 
 	$ make
 	
-In `src` you should have now see a `Lambda.app` inside. Move it to `/Applications`. Then launch `X11` (`XQuartz`) and open the app. If `X11` is not running, you will not be able to open the visualization window.
+In `src` you should have now see a `Lambda.app` inside. Move it to `/Applications`. First launch `XQuartz`, then open the Lambda app.
 
 # Usage
 
