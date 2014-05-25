@@ -3257,6 +3257,7 @@ void lambda::processRep()
 //              walls are now treated as filters. Added
 //              AUTOEXIT-functionality.
 //
+
 void lambda::processSim()
 {
 	if (data.pres!=NULL)
@@ -3314,7 +3315,6 @@ void lambda::processSim()
 			if ((alpha<0.f)||(alpha>=360.f))  	// angle out of bounds?
 			    alpha=0.f;
 			float t=(float)config.n/(float)config.fSample;
-			float onepi=3.1415926f;
 			float twopi=6.2831853f;
 			float T=1.f/freq;
 			float hann;
@@ -3351,7 +3351,7 @@ void lambda::processSim()
 						hann=1.f;
 					else
 					{
-						hann=(float)cos(onepi*(t+T/2.f)/T); // compute hann window
+						hann=(float)cos(3.1415926f*(t+T/2.f)/T); // compute hann window
 						hann*=hann;
 					}
 					presPres[srcxy] += hann*amp*(float)sin(twopi_freq*t+onepi_phi_180);
@@ -3361,26 +3361,26 @@ void lambda::processSim()
 					if ((alpha>=0.f)&&(alpha<90.f))
 					{
 						// alpha between 0 and 90 degrees? -> left and top incidence
-						data.velo_left[srcxy]=cos(alpha*onepi/180.f)*magnitude;
-						data.velo_top[srcxy]=sin(alpha*onepi/180.f)*magnitude;
+						data.velo_left[srcxy]=cos(alpha*(3.1415926f/180.f))*magnitude;
+						data.velo_top[srcxy]=sin(alpha*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=90.f)&&(alpha<180.f))
 					{
 						// alpha between 90 and 180 degrees? -> top and right incidence
-						data.velo_top[srcxy]=cos((alpha-90.f)*onepi/180.f)*magnitude;
-						data.velo_right[srcxy]=sin((alpha-90.f)*onepi/180.f)*magnitude;
+						data.velo_top[srcxy]=cos((alpha-90.f)*((3.1415926f/180.f)))*magnitude;
+						data.velo_right[srcxy]=sin((alpha-90.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=180.f)&&(alpha<270.f))
 					{
 						// alpha between 180 and 270 degrees? -> right and bottom incidence
-						data.velo_right[srcxy]=cos((alpha-180.f)*onepi/180.f)*magnitude;
-						data.velo_bottom[srcxy]=sin((alpha-180.f)*onepi/180.f)*magnitude;
+						data.velo_right[srcxy]=cos((alpha-180.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_bottom[srcxy]=sin((alpha-180.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=270.f)&&(alpha<360.f))
 					{
 						// alpha between 270 and 360 degrees? -> bottom and left incidence
-						data.velo_bottom[srcxy]=cos((alpha-270.f)*onepi/180.f)*magnitude;
-						data.velo_left[srcxy]=sin((alpha-270.f)*onepi/180.f)*magnitude;
+						data.velo_bottom[srcxy]=cos((alpha-270.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_left[srcxy]=sin((alpha-270.f)*(3.1415926f/180.f))*magnitude;
 					}
 					break;
 				case 7: // rectangular velocity source
@@ -3391,26 +3391,26 @@ void lambda::processSim()
 					if ((alpha>=0.f)&&(alpha<90.f))
 					{
 						// alpha between 0 and 90 degrees? -> left and top incidence
-						data.velo_left[srcxy]=cos(alpha*onepi/180.f)*magnitude;
-						data.velo_top[srcxy]=sin(alpha*onepi/180.f)*magnitude;
+						data.velo_left[srcxy]=cos(alpha*(3.1415926f/180.f))*magnitude;
+						data.velo_top[srcxy]=sin(alpha*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=90.f)&&(alpha<180.f))
 					{
 						// alpha between 90 and 180 degrees? -> top and right incidence
-						data.velo_top[srcxy]=cos((alpha-90.f)*onepi/180.f)*magnitude;
-						data.velo_right[srcxy]=sin((alpha-90.f)*onepi/180.f)*magnitude;
+						data.velo_top[srcxy]=cos((alpha-90.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_right[srcxy]=sin((alpha-90.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=180.f)&&(alpha<270.f))
 					{
 						// alpha between 180 and 270 degrees? -> right and bottom incidence
-						data.velo_right[srcxy]=cos((alpha-180.f)*onepi/180.f)*magnitude;
-						data.velo_bottom[srcxy]=sin((alpha-180.f)*onepi/180.f)*magnitude;
+						data.velo_right[srcxy]=cos((alpha-180.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_bottom[srcxy]=sin((alpha-180.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=270.f)&&(alpha<360.f))
 					{
 						// alpha between 270 and 360 degrees? -> bottom and left incidence
-						data.velo_bottom[srcxy]=cos((alpha-270.f)*onepi/180.f)*magnitude;
-						data.velo_left[srcxy]=sin((alpha-270.f)*onepi/180.f)*magnitude;
+						data.velo_bottom[srcxy]=cos((alpha-270.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_left[srcxy]=sin((alpha-270.f)*(3.1415926f/180.f))*magnitude;
 					}
 					break;
 				case 8: // delta-pulse velocity source
@@ -3419,26 +3419,26 @@ void lambda::processSim()
 					if ((alpha>=0.f)&&(alpha<90.f))
 					{
 						// alpha between 0 and 90 degrees? -> left and top incidence
-						data.velo_left[srcxy]=cos(alpha*onepi/180.f)*magnitude;
-						data.velo_top[srcxy]=sin(alpha*onepi/180.f)*magnitude;
+						data.velo_left[srcxy]=cos(alpha*(3.1415926f/180.f))*magnitude;
+						data.velo_top[srcxy]=sin(alpha*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=90.f)&&(alpha<180.f))
 					{
 						// alpha between 90 and 180 degrees? -> top and right incidence
-						data.velo_top[srcxy]=cos((alpha-90.f)*onepi/180.f)*magnitude;
-						data.velo_right[srcxy]=sin((alpha-90.f)*onepi/180.f)*magnitude;
+						data.velo_top[srcxy]=cos((alpha-90.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_right[srcxy]=sin((alpha-90.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=180.f)&&(alpha<270.f))
 					{
 						// alpha between 180 and 270 degrees? -> right and bottom incidence
-						data.velo_right[srcxy]=cos((alpha-180.f)*onepi/180.f)*magnitude;
-						data.velo_bottom[srcxy]=sin((alpha-180.f)*onepi/180.f)*magnitude;
+						data.velo_right[srcxy]=cos((alpha-180.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_bottom[srcxy]=sin((alpha-180.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=270.f)&&(alpha<360.f))
 					{
 						// alpha between 270 and 360 degrees? -> bottom and left incidence
-						data.velo_bottom[srcxy]=cos((alpha-270.f)*onepi/180.f)*magnitude;
-						data.velo_left[srcxy]=sin((alpha-270.f)*onepi/180.f)*magnitude;
+						data.velo_bottom[srcxy]=cos((alpha-270.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_left[srcxy]=sin((alpha-270.f)*(3.1415926f/180.f))*magnitude;
 					}
 					break;
 				case 9: // exponential decay velocity source (not working correctly yet!!!)
@@ -3446,26 +3446,26 @@ void lambda::processSim()
 					if ((alpha>=0.f)&&(alpha<90.f))
 					{
 						// alpha between 0 and 90 degrees? -> left and top incidence
-						data.velo_left[srcxy]=cos(alpha*onepi/180.f)*magnitude;
-						data.velo_top[srcxy]=sin(alpha*onepi/180.f)*magnitude;
+						data.velo_left[srcxy]=cos(alpha*(3.1415926f/180.f))*magnitude;
+						data.velo_top[srcxy]=sin(alpha*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=90.f)&&(alpha<180.f))
 					{
 						// alpha between 90 and 180 degrees? -> top and right incidence
-						data.velo_top[srcxy]=cos((alpha-90.f)*onepi/180.f)*magnitude;
-						data.velo_right[srcxy]=sin((alpha-90.f)*onepi/180.f)*magnitude;
+						data.velo_top[srcxy]=cos((alpha-90.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_right[srcxy]=sin((alpha-90.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=180.f)&&(alpha<270.f))
 					{
 						// alpha between 180 and 270 degrees? -> right and bottom incidence
-						data.velo_right[srcxy]=cos((alpha-180.f)*onepi/180.f)*magnitude;
-						data.velo_bottom[srcxy]=sin((alpha-180.f)*onepi/180.f)*magnitude;
+						data.velo_right[srcxy]=cos((alpha-180.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_bottom[srcxy]=sin((alpha-180.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=270.f)&&(alpha<360.f))
 					{
 						// alpha between 270 and 360 degrees? -> bottom and left incidence
-						data.velo_bottom[srcxy]=cos((alpha-270.f)*onepi/180.f)*magnitude;
-						data.velo_left[srcxy]=sin((alpha-270.f)*onepi/180.f)*magnitude;
+						data.velo_bottom[srcxy]=cos((alpha-270.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_left[srcxy]=sin((alpha-270.f)*(3.1415926f/180.f))*magnitude;
 					}
 					break;
 				case 10: // hann-windowed sinusoidal velocity source
@@ -3475,33 +3475,33 @@ void lambda::processSim()
 						hann=1.f;
 					else
 					{
-						hann=(float)cos(onepi*(t+T/2.f)/T); // compute hann window
+						hann=(float)cos(3.1415926f*(t+T/2.f)/T); // compute hann window
 						hann*=hann;
 					}
-					magnitude=config.rho*config.cTube*hann*amp*(float)sin(twopi*freq*t+onepi*phi/180.f);
+					magnitude=config.rho*config.cTube*hann*amp*(float)sin(twopi*freq*t+3.1415926f*phi/180.f);
 					if ((alpha>=0.f)&&(alpha<90.f))
 					{
 						// alpha between 0 and 90 degrees? -> left and top incidence
-						data.velo_left[srcxy]=cos(alpha*onepi/180.f)*magnitude;
-						data.velo_top[srcxy]=sin(alpha*onepi/180.f)*magnitude;
+						data.velo_left[srcxy]=cos(alpha*(3.1415926f/180.f))*magnitude;
+						data.velo_top[srcxy]=sin(alpha*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=90.f)&&(alpha<180.f))
 					{
 						// alpha between 90 and 180 degrees? -> top and right incidence
-						data.velo_top[srcxy]=cos((alpha-90.f)*onepi/180.f)*magnitude;
-						data.velo_right[srcxy]=sin((alpha-90.f)*onepi/180.f)*magnitude;
+						data.velo_top[srcxy]=cos((alpha-90.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_right[srcxy]=sin((alpha-90.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=180.f)&&(alpha<270.f))
 					{
 						// alpha between 180 and 270 degrees? -> right and bottom incidence
-						data.velo_right[srcxy]=cos((alpha-180.f)*onepi/180.f)*magnitude;
-						data.velo_bottom[srcxy]=sin((alpha-180.f)*onepi/180.f)*magnitude;
+						data.velo_right[srcxy]=cos((alpha-180.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_bottom[srcxy]=sin((alpha-180.f)*(3.1415926f/180.f))*magnitude;
 					}
 					else if ((alpha>=270.f)&&(alpha<360.f))
 					{
 						// alpha between 270 and 360 degrees? -> bottom and left incidence
-						data.velo_bottom[srcxy]=cos((alpha-270.f)*onepi/180.f)*magnitude;
-						data.velo_left[srcxy]=sin((alpha-270.f)*onepi/180.f)*magnitude;
+						data.velo_bottom[srcxy]=cos((alpha-270.f)*(3.1415926f/180.f))*magnitude;
+						data.velo_left[srcxy]=sin((alpha-270.f)*(3.1415926f/180.f))*magnitude;
 					}
 					break;
 				case 20: // white-noise
@@ -3513,9 +3513,9 @@ void lambda::processSim()
 					b0 = data.mem[mempos];
 					b1 = data.mem[mempos+1];
 					b2 = data.mem[mempos+2];
-					b0 = 0.99765 * b0 + white * 0.0990460;
-					b1 = 0.96300 * b1 + white * 0.2965164; 
-					b2 = 0.57000 * b2 + white * 1.0526913; 
+					b0 = 0.99765f * b0 + white * 0.0990460f;
+					b1 = 0.96300f * b1 + white * 0.2965164f; 
+					b2 = 0.57000f * b2 + white * 1.0526913f; 
 					presPres[srcxy] += b0 + b1 + b2 + white * 0.1848;  
 					data.mem[mempos] = b0;
 					data.mem[mempos+1] = b1;
@@ -3534,7 +3534,7 @@ void lambda::processSim()
 		float yn; // filter output
 		int config_nX = config.nX;
 		// Work through all the nodes in the environment
-		for (int pos=0;pos<config.nNodes;pos++)
+		for (register int pos=0;pos<config.nNodes;pos++)
 		{
 			index_presFutu[pos]=0.f;
 			if (!data.deadnode[pos]) // deadnode? --> no calculation needed!
@@ -3828,14 +3828,14 @@ void lambda::adaptreflexionfactor(int& dest_numcoeffs,float*& dest_coeffsA,float
 	if (direction==kHorizontal)
 	{
 		// do horizontal preemphasis
-		anew=(a+b)+sqrt(2.f)*abs(cos(alpha*3.1415926f/180.f))*(a-b);
-		bnew=(a+b)-sqrt(2.f)*abs(cos(alpha*3.1415926f/180.f))*(a-b);
+		anew=(a+b)+sqrt(2.f)*abs(cos(alpha*(3.1415926f/180.f)))*(a-b);
+		bnew=(a+b)-sqrt(2.f)*abs(cos(alpha*(3.1415926f/180.f)))*(a-b);
 	}
 	else if (direction==kVertical)
 	{
 		// do vertical preemphasis
-		anew=(a+b)+sqrt(2.f)*abs(sin(alpha*3.1415926f/180.f))*(a-b);
-		bnew=(a+b)-sqrt(2.f)*abs(sin(alpha*3.1415926f/180.f))*(a-b);
+		anew=(a+b)+sqrt(2.f)*abs(sin(alpha*(3.1415926f/180.f)))*(a-b);
+		bnew=(a+b)-sqrt(2.f)*abs(sin(alpha*(3.1415926f/180.f)))*(a-b);
 	}
 	else
 	{
@@ -3913,14 +3913,14 @@ void lambda::adaptfilter(int& dest_numcoeffs,float*& dest_coeffsA,float*& dest_c
 		if (direction==kHorizontal)
 		{
 			// do horizontal preemphasis
-			anew=(a+b)+sqrt(2.f)*abs(cos(alpha*3.1415926f/180.f))*(a-b);
-			bnew=(a+b)-sqrt(2.f)*abs(cos(alpha*3.1415926f/180.f))*(a-b);
+			anew=(a+b)+sqrt(2.f)*abs(cos(alpha*(3.1415926f/180.f)))*(a-b);
+			bnew=(a+b)-sqrt(2.f)*abs(cos(alpha*(3.1415926f/180.f)))*(a-b);
 		}
 		else if (direction==kVertical)
 		{
 			// do vertical preemphasis
-			anew=(a+b)+sqrt(2.f)*abs(sin(alpha*3.1415926f/180.f))*(a-b);
-			bnew=(a+b)-sqrt(2.f)*abs(sin(alpha*3.1415926f/180.f))*(a-b);
+			anew=(a+b)+sqrt(2.f)*abs(sin(alpha*(3.1415926f/180.f)))*(a-b);
+			bnew=(a+b)-sqrt(2.f)*abs(sin(alpha*(3.1415926f/180.f)))*(a-b);
 		}
 		else
 		{
