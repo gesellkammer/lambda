@@ -75,6 +75,53 @@ inline void interpolcol(float dx, int r0, int g0, int b0, int r1, int g1, int b1
 	b = b0 + dx * (b1-b0);
 }
 
+inline void colormap_paint(float v, int cmap, int &r, int &g, int &b) {
+    switch(cmap) {
+        case 0:
+            // greyscale
+            r = v*255; g = v*255, b=v*255;
+            break;
+        case 1:
+            // heat
+            switch( int(v*4) ) {
+                case 0:
+                    interpolcol(v/0.25, 0, 0, 0, 69, 25, 94, r, g, b);
+                    break;
+                case 1:
+                    interpolcol((v-0.25)/0.25, 60, 25, 94, 216, 82, 50, r, g, b);
+                    break;
+                case 2:
+                    interpolcol((v-0.5)/0.25, 216, 82, 50, 253, 162, 28, r, g, b);
+                    break;
+                case 3:
+                    interpolcol((v-0.75)/0.25, 253, 162, 28, 255, 255, 255, r, g, b);
+                    break;
+                default:
+                    r = 255; g = 255; b = 255;
+                    break;
+            }
+            break;
+        case 2:
+            // temp
+            switch( int(v*4) ) {
+                case 0:
+                    interpolcol(v/0.25, 0, 0, 102, 87, 113, 234, r, g, b);
+                    break;
+                case 1:
+                    interpolcol((v-0.25)/0.25, 87, 113, 234, 228, 234, 252, r, g, b);
+                    break;
+                case 2:
+                    interpolcol((v-0.5)/0.25, 228, 234, 252, 253, 251, 130, r, g, b);
+                    break;
+                case 3:
+                    interpolcol((v-0.75)/0.25, 253, 251, 130, 208, 34, 41, r, g, b);
+                    break;
+                default:
+                    r = 208; g = 34; b = 41;
+                    break;
+            }   
+    }
+}
 
 void colormap_heat(float v, int &r, int &g, int &b) {
 	// v should be 0-1
@@ -293,7 +340,7 @@ void lambda::initGui(const char *name)
 	gui.samplesLabel->setBuddy(gui.samplesBox);
 	gui.samplesBox->setValue(GFX_STDSAMPLES);
 	gui.samplesBox->setFrame(false);
-	gui.samplesBox->setSpecialValueText("infinite");
+	gui.samplesBox->setSpecialValueText("INF");
 	gui.samplesBox->setAlignment(Qt::AlignRight);
 	gui.samplesBox->setFixedWidth(GUI_SPINWIDTH);
 	gui.samplesBox->setRange(0,GFX_MAXSAMPLES);
@@ -968,7 +1015,10 @@ void lambda::handleParameters(int argc, char *argv[])
 	if (clickAvi) gui.aviBox->setChecked(true);
 	if (clickRce) gui.rceBox->setChecked(true);
 	if (clickRco) gui.rcoBox->setChecked(true);
-	if (clickVis) gui.visBox->setChecked(true);
+	if (clickVis) {
+        gui.visBox->setEnabled(true);
+        gui.visBox->setChecked(true);
+    }
 	if (clickWalls) gui.showboundsBox->setChecked(true);
 	if (startSim) gui.startButton->click();
 }
@@ -1626,9 +1676,6 @@ void lambda::processVis()
 	if (graphics.screen!=NULL)
 	{
 		processFrame(graphics.frame);
-
-		// Write authors into picture
-		// graphics.frame->draw_text(graphics.dispSizeX-242,graphics.dispSizeY-12,graphics.colors.white,graphics.colors.grey,0.5,"M.Ruhland, M.Blau, and others; IHA Oldenburg");
 		// show frame on screen	
 		graphics.screen->display(*graphics.frame);
 		if (graphics.screen->is_closed()) gui.visBox->click();
@@ -1640,15 +1687,21 @@ void lambda::processFrame(CImg<float> *frame) {
 	float v;
 	float contrast = (float)graphics.contrast/255.f;
 	colormap_t cm = get_colormap(config.colormap);
-	int nNodes = config.nNodes;
-	int nNodes2 = config.nNodes*2;
+    //int cmap = config.colormap;
+	unsigned int nNodes = config.nNodes;
+	unsigned int nNodes2 = nNodes*2;
 	float *framedata = frame->data();
-	for (register int n=0;n<config.nNodes;n++) {
-		v = index.presPres[n] * contrast + 0.5;
+    float *presPres = index.presPres;
+    bool *deadnodes = data.deadnode;
+    float *envi = data.envi;
+	for (register unsigned int n=0;n<nNodes;n++) {
+		//v = index.presPres[n] * contrast + 0.5;
+        v = presPres[n] * contrast + 0.5;
 		if (v > 1) v = 1;
 		else if (v < 0) v = 0;
 		cm(v, r, g, b);
-		framedata[n] = r;
+        //colormap_paint(v, cmap, r, g, b);
+        framedata[n] = r;
 		framedata[n+nNodes] = g;
 		framedata[n+nNodes2] = b;
 	};
@@ -1656,15 +1709,17 @@ void lambda::processFrame(CImg<float> *frame) {
 	// draw walls and receivers, if walls-checkbox is checked
 	if (gui.showboundsBox->isChecked())
 	{
-		for (register int n=0;n<config.nNodes;n++) {
-			if( data.deadnode[n]) {
-				framedata[n] = 0;
-				framedata[n+nNodes] = 0;
-				framedata[n+nNodes2] = 0;
-			} else if (abs(data.envi[n])!=0.f) {
-				framedata[n] = 50;
-				framedata[n+nNodes] = 50;
-				framedata[n+nNodes2] = 0;
+		for (register unsigned int n=0;n<nNodes;n++) {
+			if( deadnodes[n] ) {
+                // is it a deadnode?
+				framedata[n]         = 40;
+				framedata[n+nNodes]  = 200;
+				framedata[n+nNodes2] = 40;
+			} else if( envi[n]!=0.f ) {
+                // is it a wall?
+				framedata[n]         = 50;
+				framedata[n+nNodes]  = 50;
+				framedata[n+nNodes2] = 255;
 			} 
 		}
 	}
@@ -1672,6 +1727,7 @@ void lambda::processFrame(CImg<float> *frame) {
 	char buf[40];
 	sprintf(buf, "%05i: %-#.2f ms", config.n+1,config.n*config.tSample*1E3);
 	cm(0.5, r, g, b);
+    //colormap_paint(0.5, cmap, r, g, b);
 	float bg[3] = {r, g, b};
 	frame->draw_text(0, 0, buf, graphics.colors.black, bg);
 }
@@ -2937,9 +2993,12 @@ simError lambda::loadSimulation(const string fileName)
 	// work through all nodes
 	for (int pos=0;pos<config.nNodes;pos++)
 	{
+        // four walls around the node?
    		if ((data.filt_left[pos])&&(data.filt_top[pos])&&
-			(data.filt_right[pos])&&(data.filt_bottom[pos])) // four walls around the node?
-		data.deadnode[pos]=true;    // ---> yes, it's a deadnode
+			(data.filt_right[pos])&&(data.filt_bottom[pos])) 
+        {
+            data.deadnode[pos]=true;    // ---> yes, it's a deadnode
+        } 
 	}
 
 	for (int n=0;n<tmp_numfilters;n++)	// delete all the temporary filter stuff

@@ -212,6 +212,9 @@ Lambda offers some useful command line options to enable users to automize the s
                    the same name of the simulation file and 
                    .avi extension.
 
+-avifps fps        Sets the frames per second of the video
+                   Default=25
+
 -rce               Switches on the recording of receivers.
                    Sound pressure data at the user defined 
                    receiver nodes will be saved to disk.
@@ -223,7 +226,7 @@ Lambda offers some useful command line options to enable users to automize the s
 						
 -walls             Switches on visualization of walls
                    (this only makes sense if the -vis 
-                   option is also set). 
+                   option is also set).
 							
 -exit              exit after the final number of iterations
                    is reached. This is very useful for batch
