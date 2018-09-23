@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librevel", "librevel.vcproj", "{75E26F09-ACDA-402C-A91E-853CE969EDE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reveltest", "reveltest.vcproj", "{2369B006-9711-4FD5-9A33-FF778C6571E5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{75E26F09-ACDA-402C-A91E-853CE969EDE4} = {75E26F09-ACDA-402C-A91E-853CE969EDE4}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75E26F09-ACDA-402C-A91E-853CE969EDE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{75E26F09-ACDA-402C-A91E-853CE969EDE4}.Debug|Win32.Build.0 = Debug|Win32
+		{75E26F09-ACDA-402C-A91E-853CE969EDE4}.Release|Win32.ActiveCfg = Release|Win32
+		{75E26F09-ACDA-402C-A91E-853CE969EDE4}.Release|Win32.Build.0 = Release|Win32
+		{2369B006-9711-4FD5-9A33-FF778C6571E5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2369B006-9711-4FD5-9A33-FF778C6571E5}.Debug|Win32.Build.0 = Debug|Win32
+		{2369B006-9711-4FD5-9A33-FF778C6571E5}.Release|Win32.ActiveCfg = Release|Win32
+		{2369B006-9711-4FD5-9A33-FF778C6571E5}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

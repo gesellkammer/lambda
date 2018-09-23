@@ -1,0 +1,1700 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Lambda manual</title>
+</head>
+<body bgcolor="#ffffff" link="blue" vlink="blue">
+<table border="0" width="100%">
+  <tbody>
+    <tr>
+      <td align="left" valign="top"> <span
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 350%;"><u><b>Lambda
+2.0</b></u> <img src="lambda.gif" valign="bottom"></span><br>
+      <span
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">simon.ahrens
+at stud.fh-oldenburg.de<br>
+matthias.blau at fh-oldenburg.de<br>
+marco.ruhland at stud.fh-oldenburg.de<br>
+www.hoertechnik-audiologie.de</span><br>
+      </td>
+      <td align="right"> <img src="iha_logo.gif"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">
+<span
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 120%;"><b>Contents</b>
+</span><br>
+<br>
+<b><a href="#1.">1. Installation</a></b><br>
+&nbsp; &nbsp; <a href="#1.1">1.1 Installing the prebuilt binaries</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a href="#1.1.1">1.1.1 Linux</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a href="#1.1.2">1.1.2 Windows</a><br>
+&nbsp; &nbsp; <a href="#1.2">1.2 Building from source</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a href="#1.2.1">1.2.1 Linux</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a href="#1.2.2">1.2.2 Windows</a><br>
+<br>
+<b><a href="#2.">2. Simulation input</a></b><br>
+&nbsp; &nbsp; <a href="#2.1">2.1 Overview</a><br>
+&nbsp; &nbsp; <a href="#2.2">2.2 Sim files</a><a href="#2.2.2"></a><br>
+&nbsp; &nbsp; <a href="#2.3">2.3 Using the scripts</a><br>
+&nbsp; &nbsp; <a href="#2.4">2.4 Geometry and coordinates conventions</a><br>
+<br>
+<b><a href="#3.">3. Using Lambda</a></b><br>
+&nbsp; &nbsp; <a href="#3.1">3.1 Command line options</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a href="#3.1.1">3.1.1 Linux</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a href="#3.1.2">3.1.2 Windows</a><br>
+&nbsp; &nbsp; <a href="#3.2">3.2 The interface</a><br>
+<br>
+<b><a href="#4.">4. Quick tutorial for Windows users</a></b><br>
+<br>
+<b><a href="#5.">5. Copyright notes</a></b><br>
+&nbsp; &nbsp; <a href="#5.1">4.1 Lambda</a><br>
+&nbsp; &nbsp; <a href="#5.2">4.2 Cool Image Library</a><br>
+&nbsp; &nbsp; <a href="#5.3">4.3 Really Easy Video Encoding Library</a><br>
+&nbsp; &nbsp; <a href="#5.4">4.4 XviD core library</a><br>
+&nbsp; &nbsp; <a href="#5.5">4.5 Trolltech QT Open Source Edition</a><br>
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 150%;">
+<b><a name="1.">1. INSTALLATION</a></b>
+</span><br>
+<br>
+You can either run the prebuilt binaries from this package or make your
+own build from the source, especially if the
+prebuilt executable generates problems on your machine.<br>
+<br>
+<span
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 120%;">
+<b><a name="1.1">1.1 Installing the prebuilt binaries</a></b>
+</span><br>
+<br>
+<b><a name="1.1.1">1.1.1 Linux</a></b><br>
+Required packages:<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; libc6 version 2.4 or higher</span><br>
+<br>
+If you have the Linux package (suffix "glx"), simply extract the
+contents of "bin" to "/usr/bin/".
+Extract the directories "examples", "doc" and "scripts" to your file
+system if you intend to use them.
+<br>
+<br>
+<b><a name="1.1.2">1.1.2 Windows</a></b><br>
+If you have the Windows package (suffix "w32"), extract the contents of
+"bin" from the zipped archive to a path of choice, e.g. "C:\Lambda".
+Extract the directories "examples", "doc" and "scripts" to the same
+directory if you intend to use them.
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="1.2">1.2 Building from source</a></b>
+</span><br>
+<br>
+<b><a name="1.2.1">1.2.1 Linux</a></b><br>
+Required packages:<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; libQt4-core<br>
+&nbsp; &nbsp; &nbsp; &nbsp; libQt4-debug<br>
+&nbsp; &nbsp; &nbsp; &nbsp; libQt4-debug-dev<br>
+&nbsp; &nbsp; &nbsp; &nbsp; libQt4-dev<br>
+&nbsp; &nbsp; &nbsp; &nbsp; gcc, g++</span> (or any other C++ compiler)<br>
+<br>
+Extract the archive to your file system. Go to the location you
+extracted it to and cd into the "src" directory.
+Run<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; qmake<br>
+<br>
+</span>Once qmake is finished, run<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; make<br>
+<br>
+</span>You should now have the lambda executable in the "src"
+directory. <br>
+<br>
+<b><a name="1.2.2">1.2.2 Windows</a></b><br>
+Required software:<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; Trolltech Qt 4<br>
+<br>
+</span>Extract the archive to your file system. Go to the location you
+extracted it to and cd into the "src" directory.
+Run<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; qmake<br>
+<br>
+</span>Once qmake is finished, run<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; make<br>
+<br>
+</span>
+You should now find the executable in the "release" directory. Now,
+copy the QT libraries <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">QtCore4.dll</span>
+and <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">QtGui4.dll</span>
+to that directory. Also copy <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">mingwm10.dll</span>
+to that directory (all these .dll files can are also provided in the
+bin directory of the lambda w32 package).<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;"></span><br>
+<br>
+Since compiling the AVI encoder creates a lot of problems on Windows
+machines, the Windows version of Lambda compiles without this feature
+in the standard configuration. If you intend to compile with the AVI
+encoder, open lambda.pro
+in a text editor and replace <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+lambda_noAVI.h</span> in the <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+HEADERS</span> line with <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+lambda.h</span> and replace <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+lambda_noAVI.cpp</span> in the <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+SOURCES</span> line with <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+lambda.cpp</span>. Then, open main.cpp in a text editor and replace <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+lambda_noAVI.h</span> in the <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+#include</span> line with <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+lambda.h</span> and run qmake and make again.
+<br>
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 150%;">
+<b><a name="2.">2. SIMULATION INPUT</a></b>
+</span><br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="2.1">2.1 Overview</a></b>
+</span><br>
+To run a simulation, Lambda must be provided with information about the
+simulated environment. Most of this information can be fed into Lambda
+in binary sim files containing certain data in a certain structure
+described below. The easiest way to create sim files is to use the
+included scripts for Scilab (freeware) and Matlab.
+<br>
+The new version 2.0 of Lambda offers new features like frequency
+dependent boundary conditions and velocity sources. Since these
+features require some definitions that the old sim file format could
+not offer, a new sim file format had to be introduced. Unfortunately,
+this means that <span style="font-weight: bold; color: rgb(255, 0, 0);">the
+actual version 2.0 is no longer compatible to older sim files which
+have been generated for the usage with Lambda 1.2!</span> <span
+ style="font-weight: bold; color: rgb(255, 0, 0);">But you can use the
+script "converter.m" or "converter.sce" to transform your old 1.x sim
+files into the new 2.0 format. This script is delivered in the
+"scripts" folder.</span> The new sim
+file format is divided into a header and several data chunks which are
+explained in the following paragraphs.<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="2.2">2.2 Sim files</a></b>
+</span><br>
+</p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">The
+structure of sim files is as follows:</p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold;">HEADER:</span>&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; A string of 12 characters, containing the text
+"LAMBDASIM200". This indicates that the sim file is of the new 2.0
+format.</p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold;">DEF chunk:</span>&nbsp;&nbsp; This is
+a data chunk that contains some important simulation conditions. The
+header must always be follow by the DEF chunk. It is built up as
+follows:</p>
+<table
+ style="margin-left: auto; margin-right: auto; text-align: left; width: 75%;"
+ border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td>Chunk ID</td>
+      <td>3 unsigned characters</td>
+      <td>containig the string "DEF" as identifier</td>
+    </tr>
+    <tr>
+      <td>YSIZE</td>
+      <td>double value</td>
+      <td>size of simulation area in Y-direction (number of rows) in
+pixels</td>
+    </tr>
+    <tr>
+      <td>XSIZE</td>
+      <td>double value</td>
+      <td>size of simulation area in X-direction (number of columns) in
+pixels</td>
+    </tr>
+    <tr>
+      <td>STEPS</td>
+      <td>double value</td>
+      <td>number of discrete time samples to simulate (0=infinite)</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>double value</td>
+      <td>sound propagation speed in the simulation area in m/s</td>
+    </tr>
+    <tr>
+      <td>L</td>
+      <td>double value</td>
+      <td>real world length of a single square node im m</td>
+    </tr>
+    <tr>
+      <td>RHO</td>
+      <td>double value</td>
+      <td>density of the medium in kg/m^3; (air=1,204 kg/m^3) (needed
+for velo sources)</td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-family: Helvetica,Arial,sans-serif;"></span><br>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 40px;">&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold;">ENV chunk:</span>&nbsp; This chunk
+contains the physical layout of the simulation environment in a
+2-dimensional matrix. The DEF chunk must always be followed by the ENV<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; chunk. It is built up as follows:<br>
+</p>
+<table
+ style="margin-left: auto; margin-right: auto; text-align: left; width: 75%;"
+ border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td>Chunk ID</td>
+      <td>3 unsigned characters</td>
+      <td>containing the string "ENV" as identifier</td>
+    </tr>
+    <tr>
+      <td>ENVI</td>
+      <td>double-valued 2-dim matrix<br>
+of the size YSIZE*XSIZE as defined in the DEF chunk</td>
+      <td>Each value in this matrix defines the properties of a pixel
+or "node" in the simulation environment. There are four possible
+behaviours for a node, which are encoded within this value as follows:<br>
+      <br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Node is empty space (air)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [-1...+1],excluding 0 &nbsp;&nbsp;
+&nbsp;&nbsp; Node is reflecting wall, value defines the degree<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+of reflection (r) where 1 is 100% reflective.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Negative values cause a phase shift of 180&deg;.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;
+-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Indicates a receiver node. This node type behaves<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+like empty space (air), but by clicking the Rec<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+checkbox in Lambda, the node's pressure data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+will be recorded in a .rce-file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &gt;1 (2, 3, 4,
+...)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+This indicates a frequency dependent reflective<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+node. The value should be rounded numbers.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+These numbers are filter IDs for digital filters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+that can be specified in the optional FLT chunk.</td>
+    </tr>
+  </tbody>
+</table>
+&nbsp;&nbsp; <span style="font-weight: bold;"></span><br>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 40px;">&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold;">ANG chunk:</span>&nbsp;
+This chunk contains a 2-dimensional matrix that can be filled up with
+angle values which indicate either the normal angle of reflective<br>
+&nbsp;&nbsp; (optional)&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; walls or the
+angle of incidence for velocity sources. Therefore, some physical
+properties of this simulation type shall be explained:</p>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 40px;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp; If you bild up a reflective wall in the ENV matrix,
+for example with a reflection coefficient of r=0.4, then you need to
+know that, depending on the<br>
+&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; normal angle of the wall, the
+actual reflection coefficient differs from the one you have chosen (for
+normal incidence). In fact, r will only be correct<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; on walls that
+have a normal angle of 45 degrees:</p>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 13px;"></p>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; desired r =
+0.4&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; desired r =
+0.4&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; desired r = 0.4<br>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 209px;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; normal angle =
+0&deg;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; normal angle = 30&deg;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; normal angle = 45&deg;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+X&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; X<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;
+X&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; X<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; X&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; X<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; X&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; X<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; X&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; X<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; X&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; X<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; X<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; X<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; measured r = 0.245
+!!&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; measured r = 0.338 !!&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; measured r = 0.4 (this is
+correct).</p>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 358px;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp; To avoid this error, Lambda 2.0 offers the
+possibility to "preemphase" the reflection coefficients (and also the
+coefficients of digital filters),<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; so that walls, which are assembled of
+many nodes like shown above, behave correctly. For this it is necessary
+to tell Lambda for each node,<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; that the node belongs to a wall with a
+normal angle alpha, which can be in a value between -360 and +360
+degrees. For example, for<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; the 30&deg; wall with r = 0.4, the
+ENV-matrix and the ANG-matrix should look like this:<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; ENV-matrix&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; ANG-matrix<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+0.0&nbsp; 0.0&nbsp; 0.0&nbsp; 0.4&nbsp; 0.0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;
+30&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+0.0&nbsp; 0.0&nbsp; 0.0&nbsp; 0.4&nbsp; 0.0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;
+30&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+0.0&nbsp; 0.0&nbsp; 0.4&nbsp; 0.0&nbsp; 0.0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;
+30&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+0.0&nbsp; 0.0&nbsp; 0.4&nbsp; 0.0&nbsp; 0.0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;
+30&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+0.0&nbsp; 0.4&nbsp; 0.0&nbsp; 0.0&nbsp; 0.0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp; 30&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+0.0&nbsp; 0.4&nbsp; 0.0&nbsp; 0.0&nbsp; 0.0&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp; 30&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; Then the reflection factors will be
+preemphased so that this wall really reflects with a correct value of
+0.4 for normal incidence.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; And not only the real-valued reflection
+coefficients, but also the digital filters will be preemphased to work
+correctly.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; <span style="font-weight: bold;">If you do
+not want this preemphasis to be made, you can either leave out the
+complete ANG data chunk, or fill the ANG matrix</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; with
+values which are out of the angle range (out of -360...+360&deg;, for
+example 400).<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; </span>For velocity sources, the angles in
+this matrix specify the prefered direction of scattering for that
+source. The velocity of a velo source<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; results in a pressure (depending on rho and
+propagation speed c) . This pressure will be adjusted correctly by the
+desired angle of<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; scattering for the velo source. See the
+example scripts for details.<br>
+</p>
+<table
+ style="margin-left: auto; margin-right: auto; text-align: left; width: 75%;"
+ border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td>Chunk ID</td>
+      <td>3 unsigned characters</td>
+      <td>containing the string "ANG" as identifier</td>
+    </tr>
+    <tr>
+      <td>ENVIANG</td>
+      <td>double-valued 2-dim matrix<br>
+of the size YSIZE*XSIZE as defined in the DEF chunk</td>
+      <td>Each value in this matrix defines the preemphasis angle for a
+pixel or "node"
+in the simulation environment, like explained above.<br>
+The complete "ANG" chunk can be left out if no preemphasis shall be
+done.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;"></p>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 147px;">&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold;">FLT chunk:</span>&nbsp; This chunk
+contains the coefficients of digital filters, if you want to define
+any. Each digital filter must have an own ID number. You can assign<br>
+&nbsp;&nbsp; (optional)&nbsp; &nbsp; &nbsp; a filter to a node by
+writing the filter ID into the ENV-matrix, instead of a real-valued
+reflection coefficient. If you do not want to specify digital<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; filters, the complete FLT chunk can be
+left out. In this case, all eventual filter IDs in the ENV-matrix will
+be assigned to a standard-zero-reflection<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; filter. In Lambda, a digital filter
+transfer function is defined in the form:<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; b0 + b1*z^-1 + b2*z^-2 + ... + bn*z^-n<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; H(z) =
+--------------------------------------------------<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; a0 + a1*z^-1 + a2*z^-2 + ... + an*z^-n</p>
+<table
+ style="margin-left: auto; margin-right: auto; text-align: left; width: 75%;"
+ border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td>Chunk ID</td>
+      <td>3 unsigned characters</td>
+      <td>containing the string "FLT" as identifier</td>
+    </tr>
+    <tr>
+      <td>NUMFILTERS</td>
+      <td>double value</td>
+      <td>total number of digital filters defined in this chunk</td>
+    </tr>
+    <tr>
+      <td>FILTER ID #1</td>
+      <td>double value</td>
+      <td>should be a rounded number (e.g. "2") as filter ID number</td>
+    </tr>
+    <tr>
+      <td>NA #1</td>
+      <td>double value</td>
+      <td>number of "a"-coefficients of filter #1</td>
+    </tr>
+    <tr>
+      <td>NB #1</td>
+      <td>double value</td>
+      <td>number of "b"-coefficients of filter #1</td>
+    </tr>
+    <tr>
+      <td>a0 #1</td>
+      <td>double value</td>
+      <td>filter #1: first a-coefficient a0</td>
+    </tr>
+    <tr>
+      <td>a1 #1</td>
+      <td>double value</td>
+      <td>filter #1: second a-coefficient a1</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...and so on</td>
+    </tr>
+    <tr>
+      <td>aNA #1</td>
+      <td>double value</td>
+      <td>filter #1: last a-coefficient</td>
+    </tr>
+    <tr>
+      <td>b0 #1</td>
+      <td>double value</td>
+      <td>filter #1: first b-coefficient b0</td>
+    </tr>
+    <tr>
+      <td>b1 #1</td>
+      <td>double value</td>
+      <td>filter #1: second b-coefficient b1</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>... and so on</td>
+    </tr>
+    <tr>
+      <td>bNB #1</td>
+      <td>double value</td>
+      <td>filter #1: last b-coefficient</td>
+    </tr>
+    <tr>
+      <td>FILTER ID #2</td>
+      <td>double value</td>
+      <td>ID number of the next digital filter (if any; e.g. "3")</td>
+    </tr>
+    <tr>
+      <td>NA #2</td>
+      <td>double value</td>
+      <td>number of "a"-coefficients of filter #2</td>
+    </tr>
+    <tr>
+      <td>NB #2</td>
+      <td>double value</td>
+      <td>number of "b"-coefficients of filter #2</td>
+    </tr>
+    <tr>
+      <td>a0 #2</td>
+      <td>double value</td>
+      <td>filter #2: first a-coefficient a0</td>
+    </tr>
+    <tr>
+      <td>a1 #2</td>
+      <td>double value</td>
+      <td>filter #2: second a-coefficient a1</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>... and so on</td>
+    </tr>
+    <tr>
+      <td>aNA #2</td>
+      <td>double value</td>
+      <td>filter #2: last a-coefficient</td>
+    </tr>
+    <tr>
+      <td>b0 #2</td>
+      <td>double value</td>
+      <td>filter #2: first b-coefficient b0</td>
+    </tr>
+    <tr>
+      <td>b1 #2</td>
+      <td>double value</td>
+      <td>filter #2: second b-coefficient b1</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>... and so on</td>
+    </tr>
+    <tr>
+      <td>bNB #2</td>
+      <td>double value</td>
+      <td>filter #2: last b-coefficient</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>... and so on, until NUMFILTERS filters are specified.</td>
+    </tr>
+  </tbody>
+</table>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 28px;"></p>
+<p
+ style="color: black; font-family: Tahoma,sans-serif; font-size: 80%; height: 60px;">&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold;">SRC chunk:</span>&nbsp;
+This chunk contains a vector defining the sonic sources in the
+simulation. A source can either be a pressure source or a velocity
+source.<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; There are several source types
+available in Lambda 2.0. The SRC chunk must be the last chunk in a
+simfile.</p>
+<table
+ style="margin-left: auto; margin-right: auto; text-align: left; width: 75%;"
+ border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td>Chunk ID</td>
+      <td>3 unsigned characters</td>
+      <td>containing the string "SRC" as identifier</td>
+    </tr>
+    <tr>
+      <td>NUMSOURCES</td>
+      <td>double value</td>
+      <td>number of sources defined in this chunk</td>
+    </tr>
+    <tr>
+      <td>SRC#1 YPOS</td>
+      <td>double value</td>
+      <td>Y-Position of source #1 in the environment</td>
+    </tr>
+    <tr>
+      <td>SRC#1 XPOS</td>
+      <td>double value</td>
+      <td>X-Position of source #1 in the environment</td>
+    </tr>
+    <tr>
+      <td>SRC#1 TYPE</td>
+      <td>double value</td>
+      <td>Specifies the type of source #1 (see below for type numbers)</td>
+    </tr>
+    <tr>
+      <td>SRC#1 AMP</td>
+      <td>double value</td>
+      <td>Amplitude of source #1 in Pascal (Pa) for pressure sources, or<br>
+in m/s for velocity sources</td>
+    </tr>
+    <tr>
+      <td>SRC#1 FREQ</td>
+      <td>double value</td>
+      <td>Frequency of source #1 (without effect for pulse sources)</td>
+    </tr>
+    <tr>
+      <td>SRC#1 PHASE</td>
+      <td>double value</td>
+      <td>Phase offset of source #1 in degrees</td>
+    </tr>
+    <tr>
+      <td>SRC#2 YPOS</td>
+      <td>double value</td>
+      <td>Y-Position of source #2 in the environment</td>
+    </tr>
+    <tr>
+      <td>SRC#2 XPOS</td>
+      <td>double value</td>
+      <td>X-Position of source #2 in the environment</td>
+    </tr>
+    <tr>
+      <td>SRC#2 TYPE</td>
+      <td>double value</td>
+      <td>Specifies the type of source #2 (see below for type numbers)</td>
+    </tr>
+    <tr>
+      <td>SRC#2 AMP</td>
+      <td>double value</td>
+      <td>Amplitude of source #2 in Pascal (Pa) for pressure sources, or<br>
+in m/s for velocity sources</td>
+    </tr>
+    <tr>
+      <td>SRC#2 FREQ</td>
+      <td>double value</td>
+      <td>Frequency of source #2 (without effect for pulse sources)</td>
+    </tr>
+    <tr>
+      <td>SRC#2 PHASE</td>
+      <td>double value</td>
+      <td>Phase offset of source #2 in degrees</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>... and so on, until NUMSOURCES sources are specified.</td>
+    </tr>
+  </tbody>
+</table>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; Supported source types are:<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 1&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; sinusoidal source (pressure
+source)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 2&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; square source / rectangular
+(pressure source)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 3&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; delta pulse source (pressure
+source; freq and phase have no effect on this source)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 4&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; exponential decay source
+(pressure source; NOT WORKING CORRECTLY YET!!!)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 5&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Hann-Windowed sinusoidal source
+(pressure source)<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 6&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; sinusoidal source (velocity
+source)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 7&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; square source / rectangular
+(velocity source)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 8&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; delta pulse source (velocity
+source; freq and phase have no effect on this source)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 9&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; exponential decay source
+(velocity source; NOT WORKING CORRECTLY YET!!!)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 10&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Hann-Windowed sinusoidal source
+(velocity source)<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; Be aware that the velocity sources in this
+simulation are not real velocity sources. They are only an adaption.
+Lambda does only calculate<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; pressure values, it has got no velocity
+layer. So the velocity sources in this simulation transform their
+actual velocity into a pressure, and<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; therefore their behaviour is much like
+pressure sources. But they allow you to specify a velocity amplitude,
+and not a pressure amplitude<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; like the pressure sources. A constant
+velocity amplitude results in a pressure amplitude which is dependent
+of frequency, desired angle<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; of scattering, and air density.</p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;"><b><a
+ name="2.2.2"></a></b></p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;"><b><a
+ name="2.2.2"></a></b><font color="#000000" face="Tahoma,Arial">
+<b><a name="2.3"></a></b></font></p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;"><font
+ color="#000000" face="Tahoma,Arial"><b><a name="2.3">2.3 Using the
+scripts</a></b>
+</font></p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">There
+is no difference in the usage of the included Scilab and Matlab
+scripts "createsim.sce" and "createsim.m". To create a sim file, begin
+with setting a name for the sim file. Just edit the variable FILENAME.<br>
+Edit the values for the size of the simulation area, XSIZE and YSIZE
+next, followed by the desired number of simulation steps (STEPS), the
+wave propagation speed C in m/s and the simulated length of each node
+in the simulation L in meters.<br>
+The next line creates a YSIZE x XSIZE sized matrix called ENVI, filled
+with zeros. This matrix represents the simulation environment. Go ahead
+and edit the matrix so that it represents exactly the environment you
+would like to simulate.<br>
+The last step in setting up a sim file is to define sources. for each
+source, create a 1 x 6 vector containing the source's Y-coordinate,
+X-coordinate, type, amplitude, frequency and phase shift in this very
+order. Once you are done, concatenate all source vectors to the vector
+SOURCES.<br>
+Now you are done configuring the simulation, just execute the script
+and it will create the sim file at the path you specified in the file
+name.<br>
+There are two more scripts, "readrce.sce" and "readrce.m", that read
+receiver output into Matlab or Scilab. Just enter the file name of the
+.rce file and execute the script. After the execution, your workspace
+will contain a vector REC containing each receiver's output in a single
+column. <br>
+</p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">If
+you want to use the more advanced techniques like digital filters etc.,
+see the according example scripts.</p>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;"><font
+ color="#000000" face="Tahoma,Arial">
+<b><a name="2.4">2.4 Geometry and coordinates conventions</a></b>
+</font><br>
+This image demonstrates the conventions for coordinates in Lambda:<br>
+<br>
+<img src="coords.gif"><br>
+Coordinates are always in format (Y,X), so in this example, b is at
+(2,4).<br>
+a represents (1,1), c is at (YSIZE,XSIZE), d is (1,XSIZE) and e is at
+position (YSIZE,1). <br>
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 150%;">
+<b><a name="3.">3. USING LAMBDA</a></b>
+</span><br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="3.1">3.1 Command line options</a></b>
+</span><br>
+Lambda offers some useful command line options to enable users to
+automize the simulation routines. With these options it is possible to
+configure and run Lambda from an external script so that no clicking or
+manual interference is necessary.<br>
+<br>
+<b><a name="3.1.1">3.1.1 Linux</a></b><br>
+<table
+ style="text-align: left; margin-left: auto; margin-right: auto; font-size: 100%; width: 90%;"
+ border="0">
+  <tbody>
+    <tr valign="top">
+      <td width="20%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-file
+&lt;filename&gt;<br>
+      <br>
+      </span> </td>
+      <td>Loads the specified file upon startup and starts the
+simulation as soon
+as all input arguments have been processed.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-file example.sim</span><br>
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="20%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-contrast
+&lt;value&gt;<br>
+      <br>
+      </span> </td>
+      <td>Sets the visualization contrast to the provided value.
+Contrast ranges
+from 0 to 100, Lambda's standard setting is 50.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-contrast 75</span><br>
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-zoom
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the visualization zoom to the provided value. Zoom
+ranges between
+1 and 999. .avi video output will not be encoded zoomed. Use the zoom
+function of your player for zooming .avi videos. Lambda's standard
+setting is 1.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-zoom 2</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-skip
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the amount of images to skip in the visualizaton. This
+feature
+allows to reduce impact on CPU usage. Ranges between 0 and 999 images,
+Lambda's standard setting is 0.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-skip 3</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-quality
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the graphics quality for the avi encoder. Ranges from 1
+to 100
+(percent), Lambda's standard setting is 100.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-quality 25</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-iterations
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the amount of simulation iterations or discrete time
+steps. Ranges
+from 0 to 99999, where 0 means an infinite amount (simulation will
+continue until stopped manually). Lambda's standard setting is 0.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-iterations 0</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-vis<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's visualization mode on startup.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-vis</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-avi<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's avi encoder on startup. Video output
+will be
+written to hard disk into a file with the same name like the simulation
+file and .avi extension, once a simulation is started. <br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-avi</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-rce<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's receiver mode on startup. In this mode,
+sound
+pressure data at the user defined receiver nodes will be saved to hard
+disk an a .rce file. A maximum of 10.000 data points per receiver is
+allowed in this version. <br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-rce</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td style="width: 25%;"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-rco<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's recorder creating rco files. These files
+contain
+all the simulation's pressure data and can be opened and replayed in
+Lambda in later sessions. To protect your system from running out of
+memory, a maximum of 500 frames can be recorded. <br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">./lambda
+-rco</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td><span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-walls<br>
+      </span></td>
+      <td>Switches on Lambda's wall and receiver visualization on
+startup&nbsp; (this only makes sense if the -vis option is also set).
+This option is new in Lambda 2.0.<br>
+      </td>
+    </tr>
+    <tr>
+      <td><span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">-exit<br>
+      </span></td>
+      <td>This option tells Lambda to terminate itself after the final
+number of iterations is reached. This is very useful for batch
+processing of multiple simulations. However, if a simulation's final
+number of iterations is set to 0 (infinite), the -exit option has no
+effect because the end of the simulation will never be reached.<br>
+This option is new in Lambda 2.0.</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+All arguments can be combined together, calling order is irrelevant.
+Example:<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; ./lambda -file example.sim -quality 50
+-iterations 1000 -avi<br>
+<br>
+</span>
+This command will start Lambda and load example.sim. Once the file is
+loaded, Lambda will start simulating 1000 time samples and save video
+output at 50% encoding quality to example.avi.
+<br>
+<br>
+<b><a name="3.1.2">3.1.2 Windows</a></b><br>
+<table
+ style="text-align: left; margin-left: auto; margin-right: auto; font-size: 100%; width: 90%;"
+ border="0">
+  <tbody>
+    <tr valign="top">
+      <td width="20%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/file
+&lt;filename&gt;<br>
+      <br>
+      </span> </td>
+      <td>Loads the specified file upon startup and starts the
+simulation as soon
+as all input arguments have been processed.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/file example.sim</span><br>
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="20%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/contrast
+&lt;value&gt;<br>
+      <br>
+      </span> </td>
+      <td>Sets the visualization contrast to the provided value.
+Contrast ranges
+from 0 to 100, Lambda's standard setting is 50.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/contrast 75</span><br>
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/zoom
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the visualization zoom to the provided value. Zoom
+ranges between
+1 and 999. .avi video output will not be encoded zoomed. Use the zoom
+function of your player for zooming .avi videos. Lambda's standard
+setting is 1.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/zoom 2</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/skip
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the amount of images to skip in the visualizaton. This
+feature
+allows to reduce impact on CPU usage. Ranges between 0 and 999 images,
+Lambda's standard setting is 0.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/skip 3</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/quality
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the graphics quality for the avi encoder. Ranges from 1
+to 100
+(percent), Lambda's standard setting is 100.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/quality 25</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/iterations
+&lt;value&gt;<br>
+      <br>
+      </span></td>
+      <td>Sets the amount of simulation iterations or discrete time
+steps. Ranges
+from 0 to 99999, where 0 means an infinite amount (simulation will
+continue until stopped manually). Lambda's standard setting is 0.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/iterations 0</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/vis<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's visualization mode on startup.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/vis</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/avi<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's avi encoder on startup. Video output
+will be
+written to hard disk into a file with the same name like the simulation
+file and .avi extension, once a simulation is started. <br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/avi</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/rce<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's receiver mode on startup. In this mode,
+sound
+pressure data at the user defined receiver nodes will be saved to hard
+disk an a .rce file. A maximum of 10.000 data points per receiver is
+allowed in this version. <br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/rce</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td style="width: 25%;"> <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/rco<br>
+      <br>
+      </span></td>
+      <td>Switches on Lambda's recorder creating rco files. These files
+contain
+all the simulation's pressure data and can be opened and replayed in
+Lambda in later sessions. To protect your system from running out of
+memory, a maximum of 500 frames can be recorded. <br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/rco</span><br ="">
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td><span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/walls<br>
+      </span></td>
+      <td>Switches on Lambda's wall and receiver visualization on
+startup&nbsp; (this only makes sense if the -vis option is also set).
+This option is new in Lambda 2.0.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/vis /walls</span></td>
+    </tr>
+    <tr>
+      <td><span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">/exit<br>
+      <br>
+      </span></td>
+      <td>This option tells Lambda to terminate itself after the final
+number of
+iterations is reached. This is very useful for batch processing of
+multiple simulations. However, if a simulation's final number of
+iterations is set to 0 (infinite), the -exit option has no effect
+because the end of the simulation will never be reached.<br>
+This option is new in Lambda 2.0.<br>
+Example: <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">lambda
+/exit</span></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+All arguments can be combined together, calling order is irrelevant.
+Example:<br>
+<br>
+<span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">
+&nbsp; &nbsp; &nbsp; &nbsp; lambda /file example.sim /quality 50
+/iterations 1000 /avi<br>
+<br>
+</span>
+This command will start Lambda and load example.sim. Once the file is
+loaded, Lambda will start simulating 1000 time samples and save video
+output at 50% encoding quality to example.avi.
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="3.2">3.2 The interface</a></b>
+</span><br>
+On startup, Lambda opens with the control panel. This panel lets you
+open sim files or recorded simulations and configure them depending on
+the current status. You can alter the number of iterations to be
+processed, contrast, zoom, frameskip and video quality. The control
+panel also contains checkboxes for switching output modes on and off. <br>
+The most important part is the Controls area, where you start, stop or
+pause the simulation.<br>
+This screenshot shows the control panel and shows you all the buttons
+and their keyboard shortcuts:</p>
+<img style="width: 148px; height: 506px;" src="gui2.gif" alt=""
+ align="left"><br>
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+<font size="-1">Open simulation environment (.sim)</font></span><font
+ size="-1"><br style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+or recorded simulation data file (.rco)</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;"><br>
+&nbsp;&nbsp;&nbsp; Control simulation output:</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+Switch visualization, avi encoder, receiver,</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+recorder and walls visualization on and off.</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;"><br>
+&nbsp;&nbsp;&nbsp; Start and pause a simulation. Reset</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+all simulation states after a simulation</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+has finished, take screenshots or</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+quit the program.</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;"><br>
+<br>
+&nbsp;&nbsp;&nbsp; Configure visualization, avi encoding</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+and simulation.</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;"><br>
+&nbsp;&nbsp;&nbsp; Status field shows Lambda's current</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+status. Bad Data indicates that no</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+valid simulation data has been</span><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+loaded yet.</span><br style="font-family: Helvetica,Arial,sans-serif;">
+<br>
+<br style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">Output of data
+in avi, vis, rce or rco mode can be started and stopped at any time
+during or before the simulation. Some elements of the interface may be
+subject to certain conditions. Starting a simulation requires
+simulation data to be loaded, for example.</span></font><br>
+<p style="color: black; font-family: Tahoma,sans-serif; font-size: 80%;">Output
+of .avi files is only possible with the linux version at this time.<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 150%;"><b><a
+ name="4.">4. QUICK TUTORIAL FOR MS WINDOWS USERS</a></b>
+</span><br>
+<br>
+This tutorial is a step-by-step how-to that guides you from extracting
+Lambda all the way to executing your first simulation. It assumes the
+very likely case that you use both Microsoft Windows and Mathworks
+Matlab. Linux and/or Scilab users should be able to adapt the
+procedures to their situation quite well.<br>
+<br>
+<table style="font-size: 100%;" align="center" border="0" width="90%">
+  <tbody>
+    <tr valign="top">
+      <td width="20%"> Step 1: Extraction </td>
+      <td>Create a folder on your hard disk, e.g. C:\Lambda. Open the
+zip file
+you found this manual in and extract the content of "bin" into the
+folder you just created. Then extract the content of "scripts" into the
+same directory. <br>
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="20%">Step 2: Creating a sim file </td>
+      <td>Now open the script "createsim.m" in Matlab's editor. Alter
+the first
+not-commented line to <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">FILENAME
+= 'C:\Lambda\tutorial.sim';</span>. Read through the rest of the script.<br>
+      <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">XSIZE</span>
+and <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">YSIZE</span>
+are variables containing the size of the simulation environment. <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">STEPS</span>
+is the number of discrete time steps to simulate. Set it to 0 to make
+the simulation continue until you stop it. <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">C</span>
+and <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">L</span>
+determine the sound propagation speed in the environment's medium and
+the physical edge length each pixel represents. Don't change them for
+now. They influence the simulation's sample frequency. <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">rho
+      </span>is the density of the medium (air) in kg/m^3. This value
+is needed for velocity sources only. Don't change it for now.<br>
+The next part initiates the environment matrix. It is a matrix the size
+you entered above, initialized with zeros as default value. To add
+walls to the environment, simply set any entry of the matrix to a value
+between -1 and 1 (excluding 0). This value represents the reflection
+factor for the wall. by default, the script sets the borders of the
+environment to be perfectly reflecting walls (1). You can change this
+and play around with walls.<br>
+The next part defines sound sources in the environment. For each
+source, you have to create a vector containing the x- and y-coordinates
+of the source, it's type (1 for sinusoidal, 2 for rectangular... see
+above), it's
+amplitude, frequency and phase, as shown in the example. All sources
+must be concatenated in the vector <span
+ style="color: black; font-family: Courier,Monospace; font-size: 80%;">sources</span>,
+when finished.<br>
+Now execute the script, and tutorial.sim should appear in C:\Lambda.<br>
+This is a very basic tutorial script. For advanced definitions like
+digital filters, skewed walls and velocity sources, check out the other
+tutorial scripts.<br>
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%">Step 3: Opening the sim file </td>
+      <td>Now start Lambda.exe and click the Open File button. As you
+can see,
+the file dialog filters files for ".sim" files by default. You can also
+filter for recorded simulations or have the dialog show all file types.
+You should find tutorial.sim in C:\Lambda. Open it.<br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%">Step 4: Getting ready to go </td>
+      <td>Lambda should now offer you a few options. In the top of the
+interface
+you find the Output section. Activate the visualization by checking the
+Vis checkbox. You can also activate Rco output, which would record the
+simulation and save it to your hard disk, so that you can load the
+replay later on. The Windows version does not support Avi output at
+this time. Rce would record sound pressure data of receiver nodes to
+hard disk, but we did not include any into the environment, so this
+feature will stay disabled for tutorial.sim. The Walls checkbox draws
+the walls and receivers into the visualization window.<br>
+Further down you find the Config section. You can change some display
+settings like zoom, contrast, skipping frames and the quality for avi
+output. You can also change the number of iterations (time steps) to
+simulate. It is set to infinite right now because we entered 0 in the
+sim file before. Feel free to change it.<br>
+      <br>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td width="25%">Step 5: Simulating </td>
+      <td>The status line at the bottom of the interface should say
+that the
+simulation is ready to go. Just click the Simulate button to start it.
+You can change all the Config parameters while it's running. You can
+also switch all the output channels on and off during simulation. You
+can pause it by clicking the Simulate button again and continue it the
+same way. Reset the simulation to the beginning by clicking Reset. You
+can save bmp pictures of the simulation at any time if visualization
+is on.<br>
+Simulation stops automatically when the number of iterations is reached
+or when you stop it manually. Restart it if you want to.<br>
+      <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+Now that you have completed your first simulation, try setting up
+different simulation environments and play around with the parameters.<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 150%;">
+<b><a name="5.">5. COPYRIGHT NOTES</a></b>
+</span><br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="5.1">5.1 Lambda</a></b>
+</span><br>
+Copyright (C) 2006 Simon Ahrens, Matthias Blau, IHA Oldenburg
+&lt;simon.ahrens AT stud.fh-oldenburg.de&gt;<br>
+Copyright (C) 2009 Marco Ruhland, Matthias Blau, IHA Oldenburg
+&lt;marco.ruhland AT stud.fh-oldenburg.de&gt;<br>
+<br>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.<br>
+<br>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.<br>
+<br>
+You should have received a <a href="gpl.html" target="_blank">copy</a>
+of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+USA
+or visit <a href="http://www.gnu.org/licenses/gpl.html">http://www.gnu.org/licenses/gpl.html</a>
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="5.2">5.2 Cool Image Library</a></b>
+</span><br>
+Copyright: David Tschumperle<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (<a
+ href="http://www.greyc.ensicaen.fr/%7Edtschump/" target="_blank">http://www.greyc.ensicaen.fr/~dtschump/</a>)<br>
+<br>
+This software is governed by the CeCILL license under French law and
+abiding by the rules of distribution of free software. You can use,
+modify and or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL "<a
+ href="http://www.cecill.info" target="_blank">http://www.cecill.info</a>".<br>
+<br>
+As a counterpart to the access to the source code and rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty and the software's author, the holder of the
+economic rights, and the successive licensors have only limited
+liability.<br>
+<br>
+In this respect, the user's attention is drawn to the risks associated
+with loading, using, modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean that it is complicated to manipulate, and that also
+therefore means that it is reserved for developers and experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems
+and/or data to be ensured and, more generally, to use and operate it in
+the same conditions as regards security.<br>
+<br>
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms. <br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="5.3">5.3 Really Easy Video Encoding Library</a></b>
+</span><br>
+Copyright (C) (2004) (Cort Stratton) &lt;cort AT cortstratton dot
+org&gt;<br>
+<br>
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.<br>
+<br>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.<br>
+<br>
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="5.4">5.4 XviD core library</a></b>
+</span><br>
+Copyright(C) 2001-2004 Peter Ross &lt;pross AT xvid.org&gt;<br>
+<br>
+This program is free software ; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation ; either version 2 of the License, or
+(at your option) any later version.<br>
+<br>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY ; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.<br>
+<br>
+You should have received a copy of the GNU General Public License
+along with this program ; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+<br>
+<br>
+<br>
+<span
+ style="color: black; font-family: Arial,sans-serif; font-size: 120%;">
+<b><a name="5.5">5.5 Trolltech QT Open Source Edition</a></b>
+</span><br>
+Copyright (C) 1992-2008 Trolltech ASA. All rights reserved.<br>
+<br>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.<br>
+<br>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.<br>
+<br>
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+USA
+or visit http://www.gnu.org/licenses/gpl.html<br>
+<br>
+</p>
+</body>
+</html>

@@ -1,0 +1,7 @@
+*~.*
+*.a
+*.so
+*.sync*
+*.o
+*.cache
+*.log
